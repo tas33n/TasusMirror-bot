@@ -90,7 +90,7 @@ def cm_ru(url: str) -> str:
         link = re.findall(r'\bhttps?://.*cloud\.mail\.ru\S+', url)[0]
     except IndexError:
         raise DirectDownloadLinkException("`No cloud.mail.ru links found`\n")
-    command = f'vendor/cmrudl.py/cmrudl -s {link}'
+    command = f'vendor/cmrudl/cmrudl -s {link}'
     result = popen(command).read()
     result = result.splitlines()[-1]
     try:
