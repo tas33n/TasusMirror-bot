@@ -2,19 +2,13 @@ TRACKERS=$(curl -Ns https://raw.githubusercontent.com/ngosang/trackerslist/maste
 
 aria2c \
 --allow-overwrite=true \
+--bt-enable-lpd=true \
 --bt-max-peers=0 \
 --bt-tracker="[$TRACKERS]" \
 --check-certificate=false \
 --daemon=true \
 --enable-rpc \
 --follow-torrent=mem \
---max-concurrent-downloads=4 \
---max-connection-per-server=10 \
---max-overall-download-limit=0 \
+--max-connection-per-server=16 \
 --max-overall-upload-limit=1K \
---min-split-size=10M \
---rpc-listen-all=false \
---rpc-listen-port=6800 \
---rpc-max-request-size=1024M \
---seed-time=0.01 \
---split=10
+--seed-time=0
