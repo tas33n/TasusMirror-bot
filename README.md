@@ -6,7 +6,7 @@
 - So if you have any issue then check first that issue is in official repo or not, You are only allowed to report that issue in bot support group if that issue is also present in official repo.
 
 ## Features Coming soon....
-- ~Custom Filename~ Added 
+- ~Custom Filename~ Added
 ```
 Only for url, telegram files and ytdl.
 Not for mega links and magnet/torrents
@@ -38,7 +38,7 @@ Note :- it is not a Bot Support group. It's only for discussing rubbish things b
 # What is this repo about?
 This is a telegram bot writen in python for mirroring files on the internet to our beloved Google Drive.
 
-# Inspiration 
+# Inspiration
 This project is heavily inspired from @out386 's telegram bot which is written in JS.
 
 # Features supported:
@@ -48,9 +48,9 @@ This project is heavily inspired from @out386 's telegram bot which is written i
 - Mirror all youtube-dl supported links
 - Custom filename support in direct link, telegram files, YT-DL links
 - Extract these filetypes and uploads to google drive
-> ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2, 
-> APM, ARJ, CHM, CPIO, CramFS, DEB, DMG, FAT, 
-> HFS, LZH, LZMA, LZMA2, MBR, MSI, MSLZ, NSIS, 
+> ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2,
+> APM, ARJ, CHM, CPIO, CramFS, DEB, DMG, FAT,
+> HFS, LZH, LZMA, LZMA2, MBR, MSI, MSLZ, NSIS,
 > NTFS, RPM, SquashFS, UDF, VHD, XAR, Z.
 - Copy files from someone's drive to your drive (using Autorclone)
 - Service account support in cloning and uploading
@@ -126,7 +126,7 @@ Fill up rest of the fields. Meaning of each fields are discussed below:
 - **BOT_TOKEN** : The telegram bot token that you get from @BotFather
 - **GDRIVE_FOLDER_ID** : This is the folder ID of the Google Drive Folder to which you want to upload all the mirrors.
 - **DOWNLOAD_DIR** : The path to the local folder where the downloads should be downloaded to
-- **DOWNLOAD_STATUS_UPDATE_INTERVAL** : A short interval of time in seconds after which the Mirror progress message is updated. (I recommend to keep it 5 seconds at least)  
+- **DOWNLOAD_STATUS_UPDATE_INTERVAL** : A short interval of time in seconds after which the Mirror progress message is updated. (I recommend to keep it 5 seconds at least)
 - **OWNER_ID** : The Telegram user ID (not username) of the owner of the bot
 - **AUTO_DELETE_MESSAGE_DURATION** : Interval of time (in seconds), after which the bot deletes it's message (and command message) which is expected to be viewed instantly. Note: Set to -1 to never automatically delete messages
 - **IS_TEAM_DRIVE** : (Optional field) Set to "True" if GDRIVE_FOLDER_ID is from a Team Drive else False or Leave it empty.
@@ -136,8 +136,7 @@ Fill up rest of the fields. Meaning of each fields are discussed below:
 - **API_HASH** : This is to authenticate to your telegram account for downloading Telegram files. You can get this from https://my.telegram.org
 - **MEGA_KEY**: Mega.nz api key to mirror mega.nz links. Get it from [Mega SDK Page](https://mega.nz/sdk)
 - **MEGA_USERNAME**: Your email id you used to sign up on mega.nz for using premium accounts (Leave th)
-- **MEGA_PASSWORD**: Your password for your mega.nz account 
-- **STOP_DUPLICATE_MIRROR**: (Optional field) (Leave empty if unsure) if this field is set to `True` , bot will check file in drive, if it is present in drive, downloading will ne stopped. (Note - File will be checked using filename, not using filehash, so this feature is not perfect yet)
+- **MEGA_PASSWORD**: Your password for your mega.nz account
 - **BLOCK_MEGA_LINKS**: (Optional field) If you want to remove mega.nz mirror support (bcoz it's too much buggy and unstable), set it to `True`.
 - **SHORTENER**: (Optional field) if you want to use shortener in Gdrive and index link, fill shotener url here. Examples :-
 
@@ -155,7 +154,7 @@ Note :- Above are the supported url shorteners. Except these only some url short
 - **SHORTENER_API**: Fill your shortener api key if you are using shortener.
 
 Note: You can limit maximum concurrent downloads by changing the value of MAX_CONCURRENT_DOWNLOADS in aria.sh. By default, it's set to 4
- 
+
 ## Getting Google OAuth API credential file
 
 - Visit the [Google Cloud Console](https://console.developers.google.com/apis/credentials)
@@ -193,11 +192,11 @@ Many thanks to [AutoRClone](https://github.com/xyou365/AutoRclone) for the scrip
 ## Generating service accounts
 Step 1. Generate service accounts [What is service account](https://cloud.google.com/iam/docs/service-accounts)
 ---------------------------------
-Let us create only the service accounts that we need. 
-**Warning:** abuse of this feature is not the aim of this project and we do **NOT** recommend that you make a lot of projects, just one project and 100 sa allow you plenty of use, its also possible that over abuse might get your projects banned by google. 
+Let us create only the service accounts that we need.
+**Warning:** abuse of this feature is not the aim of this project and we do **NOT** recommend that you make a lot of projects, just one project and 100 sa allow you plenty of use, its also possible that over abuse might get your projects banned by google.
 
 ```
-Note: 1 service account can copy around 750gb a day, 1 project can make 100 service accounts so that's 75tb a day, for most users this should easily suffice. 
+Note: 1 service account can copy around 750gb a day, 1 project can make 100 service accounts so that's 75tb a day, for most users this should easily suffice.
 ```
 
 `python3 gen_sa_accounts.py --quick-setup 1 --new-only`
