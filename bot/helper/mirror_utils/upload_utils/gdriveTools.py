@@ -470,7 +470,7 @@ class GoogleDriveHelper:
         return build('drive', 'v3', credentials=credentials, cache_discovery=False)
 
     def edit_telegraph(self):
-        nxt_page = 1 
+        nxt_page = 1
         prev_page = 0
         for content in self.telegraph_content :
             if nxt_page == 1 :
@@ -572,7 +572,7 @@ class GoogleDriveHelper:
                 self.edit_telegraph()
 
             msg = f"<b>Search Results For {fileName} </b>"
-            buttons = button_build.ButtonMaker()   
+            buttons = button_build.ButtonMaker()
             buttons.buildbutton("HERE", f"https://telegra.ph/{self.path[0]}")
 
             return msg, InlineKeyboardMarkup(buttons.build_menu(1))

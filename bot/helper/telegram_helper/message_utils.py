@@ -84,7 +84,7 @@ def update_all_messages():
                 if 'KiB/s' in speedy:
                     dlspeed_bytes += float(speedy.split('K')[0]) * 1024
                 elif 'MiB/s' in speedy:
-                    dlspeed_bytes += float(speedy.split('M')[0]) * 1048576 
+                    dlspeed_bytes += float(speedy.split('M')[0]) * 1048576
             if download.status() == MirrorStatus.STATUS_UPLOADING:
                 if 'KB/s' in speedy:
             	    uldl_bytes += float(speedy.split('K')[0]) * 1024
@@ -119,7 +119,7 @@ def sendStatusMessage(msg, bot):
                 if 'KiB/s' in speedy:
                     dlspeed_bytes += float(speedy.split('K')[0]) * 1024
                 elif 'MiB/s' in speedy:
-                    dlspeed_bytes += float(speedy.split('M')[0]) * 1048576 
+                    dlspeed_bytes += float(speedy.split('M')[0]) * 1048576
             if download.status() == MirrorStatus.STATUS_UPLOADING:
                 if 'KB/s' in speedy:
             	    uldl_bytes += float(speedy.split('K')[0]) * 1024
