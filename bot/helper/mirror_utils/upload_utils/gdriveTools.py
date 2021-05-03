@@ -319,7 +319,7 @@ class GoogleDriveHelper:
             meta = self.getFileMetadata(file_id)
             if meta.get("mimeType") == self.__G_DRIVE_DIR_MIME_TYPE:
                 dir_id = self.create_directory(meta.get('name'), parent_id)
-                result = self.cloneFolder(meta.get('name'), meta.get('name'), meta.get('id'), dir_id)
+                self.cloneFolder(meta.get('name'), meta.get('name'), meta.get('id'), dir_id)
                 msg += f'<b>Filename : </b><code>{meta.get("name")}</code>\n<b>Size : </b>{get_readable_file_size(self.transferred_size)}'
                 durl = self.__G_DRIVE_DIR_BASE_DOWNLOAD_URL.format(dir_id)
                 buttons = button_build.ButtonMaker()

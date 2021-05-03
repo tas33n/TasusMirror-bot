@@ -6,7 +6,6 @@ import psutil
 from bot import AUTO_DELETE_MESSAGE_DURATION, LOGGER, bot, \
     status_reply_dict, status_reply_dict_lock, download_dict, download_dict_lock
 from bot.helper.ext_utils.bot_utils import get_readable_message, get_readable_file_size, MirrorStatus
-from telegram.error import TimedOut, BadRequest
 
 def sendMessage(text: str, bot, update: Update):
     try:

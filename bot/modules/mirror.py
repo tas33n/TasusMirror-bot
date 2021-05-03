@@ -126,7 +126,6 @@ class MirrorListener(listeners.MirrorListeners):
                 LOGGER.info(str(download_dict))
             except Exception as e:
                 LOGGER.error(str(e))
-                pass
             count = len(download_dict)
         if self.message.from_user.username:
             uname = f"@{self.message.from_user.username}"

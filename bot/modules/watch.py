@@ -1,6 +1,6 @@
 from telegram.ext import CommandHandler
-from telegram import Bot, Update
-from bot import Interval, DOWNLOAD_DIR, DOWNLOAD_STATUS_UPDATE_INTERVAL, dispatcher, LOGGER
+from telegram import Bot
+from bot import DOWNLOAD_DIR, DOWNLOAD_STATUS_UPDATE_INTERVAL, Interval, dispatcher
 from bot.helper.ext_utils.bot_utils import setInterval
 from bot.helper.telegram_helper.message_utils import update_all_messages, sendMessage, sendStatusMessage
 from .mirror import MirrorListener

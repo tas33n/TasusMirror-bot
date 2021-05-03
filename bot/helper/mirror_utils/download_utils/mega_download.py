@@ -1,6 +1,5 @@
 import threading
 from bot import LOGGER, download_dict, download_dict_lock
-from .download_helper import DownloadHelper
 from ..status_utils.mega_status import MegaDownloadStatus
 from megasdkrestclient import MegaSdkRestClient, constants
 from bot.helper.ext_utils.bot_utils import setInterval
