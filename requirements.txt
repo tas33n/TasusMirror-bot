@@ -6,6 +6,7 @@ google-auth-httplib2
 google-auth-oauthlib
 js2py
 lxml
+megasdkrestclient
 psutil
 Pyrogram
 python-dotenv
@@ -16,4 +17,3 @@ telegraph
 tenacity
 TgCrypto
 youtube_dl
-megasdkrestclient>=0.1.1,<1.0.0
