@@ -11,12 +11,14 @@ for original authorship. """
 import json
 import re
 import urllib.parse
+from base64 import standard_b64encode
 from os import popen
 from random import choice
 
 import requests
 from bs4 import BeautifulSoup
 from js2py import EvalJs
+from lk21 import Bypass
 
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
 
@@ -39,6 +41,28 @@ def direct_link_generator(link: str):
         return github(link)
     elif "racaty.net" in link:
         return racaty(link)
+    elif "hxfile.co" in link:
+        return hxfile(link)
+    elif "anonfiles.com" in link:
+        return anon(link)
+    elif "fembed.com" in link:
+        return fembed(link)
+    elif "femax20.com" in link:
+        return fembed(link)
+    elif "naniplay.nanime.in" in link:
+        return fembed(link)
+    elif "naniplay.nanime.biz" in link:
+        return fembed(link)
+    elif "naniplay.com" in link:
+        return fembed(link)
+    elif "layarkacaxxi.icu" in link:
+        return fembed(link)
+    elif "sbembed.com" in link:
+        return sbembed(link)
+    elif "streamsb.net" in link:
+        return sbembed(link)
+    elif "1drv.ms" in link:
+        return onedrive(link)
     else:
         raise DirectDownloadLinkException(f"No Direct link function found for {link}")
 
@@ -170,3 +194,57 @@ def useragent():
     ).findAll("td", {"class": "useragent"})
     user_agent = choice(useragents)
     return user_agent.text
+
+
+def hxfile(url: str) -> str:
+    """Hxfile direct links generator
+    based on https://github.com/breakdowns/slam-mirrorbot"""
+    try:
+        link = re.findall(r"\bhttps?://.*hxfile\.co\S+", url)[0]
+    except IndexError:
+        raise DirectDownloadLinkException("`No Hxfile links found`\n")
+    bypasser = Bypass()
+    return str(bypasser.bypass_url(link))
+
+
+def anon(url: str) -> str:
+    """Anonfiles direct links generator
+    based on https://github.com/breakdowns/slam-mirrorbot"""
+    try:
+        link = re.findall(r"\bhttps?://.*anonfiles\.com\S+", url)[0]
+    except IndexError:
+        raise DirectDownloadLinkException("`No Anonfiles links found`\n")
+    bypasser = Bypass()
+    return str(bypasser.bypass_url(link))
+
+
+def fembed(link: str) -> str:
+    """Fembed direct link generator
+    Based on https://github.com/breakdowns/slam-mirrorbot"""
+    bypasser = Bypass()
+    result_dict = bypasser.bypass_fembed(link)
+    return list(result_dict.keys())[-1]
+
+
+def sbembed(link: str) -> str:
+    """Sbembed direct link generator
+    Based on https://github.com/breakdowns/slam-mirrorbot"""
+    bypasser = Bypass()
+    result_dict = bypasser.bypass_sbembed(link)
+    return list(result_dict.keys())[-1]
+
+
+def onedrive(link: str) -> str:
+    """Onedrive direct link generator
+    Based on https://github.com/UsergeTeam/Userge"""
+    link_without_query = urllib.parse.urlparse(link)._replace(query=None).geturl()
+    direct_link_encoded = str(
+        standard_b64encode(bytes(link_without_query, "utf-8")), "utf-8"
+    )
+    direct_link1 = (
+        f"https://api.onedrive.com/v1.0/shares/u!{direct_link_encoded}/root/content"
+    )
+    resp = requests.head(direct_link1)
+    if resp.status_code != 302:
+        return "`Error: Unauthorized link, the link may be private`"
+    return str(resp.next.url)
