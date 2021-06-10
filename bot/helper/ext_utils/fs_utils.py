@@ -1,10 +1,13 @@
-import sys
-from bot import aria2, LOGGER, DOWNLOAD_DIR
-import shutil
 import os
 import pathlib
-import magic
+import shutil
+import sys
 import tarfile
+
+import magic
+
+from bot import DOWNLOAD_DIR, LOGGER, aria2
+
 from .exceptions import NotSupportedExtractionArchive
 
 
@@ -31,7 +34,9 @@ def clean_all():
 
 def exit_clean_up(signal, frame):
     try:
-        LOGGER.info("Please wait, while we clean up the downloads and stop running downloads")
+        LOGGER.info(
+            "Please wait, while we clean up the downloads and stop running downloads"
+        )
         clean_all()
         sys.exit(0)
     except KeyboardInterrupt:
@@ -53,7 +58,7 @@ def get_path_size(path):
 def tar(org_path):
     tar_path = org_path + ".tar"
     path = pathlib.PurePath(org_path)
-    LOGGER.info(f'Tar: orig_path: {org_path}, tar_path: {tar_path}')
+    LOGGER.info(f"Tar: orig_path: {org_path}, tar_path: {tar_path}")
     tar = tarfile.open(tar_path, "w")
     tar.add(org_path, arcname=path.name)
     tar.close()
@@ -134,7 +139,7 @@ def get_base_name(orig_path: str):
     elif orig_path.endswith(".xar"):
         return orig_path.replace(".xar", "")
     else:
-        raise NotSupportedExtractionArchive('File format not supported for extraction')
+        raise NotSupportedExtractionArchive("File format not supported for extraction")
 
 
 def get_mime_type(file_path):

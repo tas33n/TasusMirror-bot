@@ -1,26 +1,40 @@
 import os
-import shutil, psutil
+import shutil
 import signal
-
-from sys import executable
 import time
+from sys import executable
 
+import psutil
+from pyrogram import idle
 from telegram.ext import CommandHandler
-from bot import bot, dispatcher, updater, botStartTime, IGNORE_PENDING_REQUESTS
+
+from bot import IGNORE_PENDING_REQUESTS, app, bot, botStartTime, dispatcher, updater
 from bot.helper.ext_utils import fs_utils
 from bot.helper.telegram_helper.bot_commands import BotCommands
-from bot.helper.telegram_helper.message_utils import LOGGER, editMessage, sendLogFile, sendMessage
+from bot.helper.telegram_helper.message_utils import (
+    LOGGER,
+    editMessage,
+    sendLogFile,
+    sendMessage,
+)
+
 from .helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time
 from .helper.telegram_helper.filters import CustomFilters
-from .modules import authorize, list, cancel_mirror, mirror_status, mirror, clone, watch, delete # noqa
-
-from pyrogram import idle
-from bot import app
+from .modules import (  # noqa
+    authorize,
+    cancel_mirror,
+    clone,
+    delete,
+    list,
+    mirror,
+    mirror_status,
+    watch,
+)
 
 
 def stats(update, context):
     currentTime = get_readable_time(time.time() - botStartTime)
-    total, used, free = shutil.disk_usage('.')
+    total, used, free = shutil.disk_usage(".")
     total = get_readable_file_size(total)
     used = get_readable_file_size(used)
     free = get_readable_file_size(free)
@@ -28,24 +42,26 @@ def stats(update, context):
     recv = get_readable_file_size(psutil.net_io_counters().bytes_recv)
     cpuUsage = psutil.cpu_percent(interval=0.5)
     memory = psutil.virtual_memory().percent
-    disk = psutil.disk_usage('/').percent
-    stats = f'<b>Bot Uptime:</b> {currentTime}\n' \
-            f'<b>Total disk space:</b> {total}\n' \
-            f'<b>Used:</b> {used}  ' \
-            f'<b>Free:</b> {free}\n\n' \
-            f'Data Usage\n<b>Upload:</b> {sent}\n' \
-            f'<b>Down:</b> {recv}\n\n' \
-            f'<b>CPU:</b> {cpuUsage}% ' \
-            f'<b>RAM:</b> {memory}% ' \
-            f'<b>Disk:</b> {disk}%'
+    disk = psutil.disk_usage("/").percent
+    stats = (
+        f"<b>Bot Uptime:</b> {currentTime}\n"
+        f"<b>Total disk space:</b> {total}\n"
+        f"<b>Used:</b> {used}  "
+        f"<b>Free:</b> {free}\n\n"
+        f"Data Usage\n<b>Upload:</b> {sent}\n"
+        f"<b>Down:</b> {recv}\n\n"
+        f"<b>CPU:</b> {cpuUsage}% "
+        f"<b>RAM:</b> {memory}% "
+        f"<b>Disk:</b> {disk}%"
+    )
     sendMessage(stats, context.bot, update)
 
 
 def start(update, context):
-    start_string = f'''
+    start_string = f"""
 This is a bot which can mirror all your links to Google drive!
 Type /{BotCommands.HelpCommand} to get a list of available commands
-'''
+"""
     sendMessage(start_string, context.bot, update)
 
 
@@ -63,7 +79,7 @@ def ping(update, context):
     start_time = int(round(time.time() * 1000))
     reply = sendMessage("Starting Ping", context.bot, update)
     end_time = int(round(time.time() * 1000))
-    editMessage(f'{end_time - start_time} ms', reply)
+    editMessage(f"{end_time - start_time} ms", reply)
 
 
 def log(update, context):
@@ -71,7 +87,7 @@ def log(update, context):
 
 
 def bot_help(update, context):
-    help_string = f'''
+    help_string = f"""
 /{BotCommands.HelpCommand}: To get this message
 
 /{BotCommands.MirrorCommand} [download_url][magnet_link]: Start mirroring the link to google drive.\nPlzzz see this for full use of this command https://telegra.ph/Magneto-Python-Aria---Custom-Filename-Examples-01-20
@@ -96,7 +112,7 @@ def bot_help(update, context):
 
 /{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports
 
-'''
+"""
     sendMessage(help_string, context.bot, update)
 
 
@@ -109,17 +125,39 @@ def main():
         bot.edit_message_text("Restarted successfully!", chat_id, msg_id)
         os.remove(".restartmsg")
 
-    start_handler = CommandHandler(BotCommands.StartCommand, start,
-                                   filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
-    ping_handler = CommandHandler(BotCommands.PingCommand, ping,
-                                  filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
-    restart_handler = CommandHandler(BotCommands.RestartCommand, restart,
-                                     filters=CustomFilters.owner_filter, run_async=True)
-    help_handler = CommandHandler(BotCommands.HelpCommand,
-                                  bot_help, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
-    stats_handler = CommandHandler(BotCommands.StatsCommand,
-                                   stats, filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
-    log_handler = CommandHandler(BotCommands.LogCommand, log, filters=CustomFilters.owner_filter, run_async=True)
+    start_handler = CommandHandler(
+        BotCommands.StartCommand,
+        start,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+        run_async=True,
+    )
+    ping_handler = CommandHandler(
+        BotCommands.PingCommand,
+        ping,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+        run_async=True,
+    )
+    restart_handler = CommandHandler(
+        BotCommands.RestartCommand,
+        restart,
+        filters=CustomFilters.owner_filter,
+        run_async=True,
+    )
+    help_handler = CommandHandler(
+        BotCommands.HelpCommand,
+        bot_help,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+        run_async=True,
+    )
+    stats_handler = CommandHandler(
+        BotCommands.StatsCommand,
+        stats,
+        filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+        run_async=True,
+    )
+    log_handler = CommandHandler(
+        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter, run_async=True
+    )
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(ping_handler)
     dispatcher.add_handler(restart_handler)
@@ -129,6 +167,7 @@ def main():
     updater.start_polling(drop_pending_updates=IGNORE_PENDING_REQUESTS)
     LOGGER.info("Bot Started!")
     signal.signal(signal.SIGINT, fs_utils.exit_clean_up)
+
 
 app.start()
 main()

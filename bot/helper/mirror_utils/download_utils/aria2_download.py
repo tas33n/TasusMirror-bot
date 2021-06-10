@@ -1,15 +1,17 @@
+import threading
+from time import sleep
+
+from aria2p import API
+
 from bot import aria2, download_dict_lock
 from bot.helper.ext_utils.bot_utils import *
-from .download_helper import DownloadHelper
 from bot.helper.mirror_utils.status_utils.aria_download_status import AriaDownloadStatus
 from bot.helper.telegram_helper.message_utils import *
-import threading
-from aria2p import API
-from time import sleep
+
+from .download_helper import DownloadHelper
 
 
 class AriaDownloadHelper(DownloadHelper):
-
     def __init__(self):
         super().__init__()
 
@@ -20,6 +22,7 @@ class AriaDownloadHelper(DownloadHelper):
         download = api.get_download(gid)
         self.name = download.name
         update_all_messages()
+
     def __onDownloadComplete(self, api: API, gid):
         LOGGER.info(f"onDownloadComplete: {gid}")
         dl = getDownloadByGid(gid)
@@ -32,47 +35,53 @@ class AriaDownloadHelper(DownloadHelper):
                 if new_download.is_torrent:
                     download_dict[dl.uid()].is_torrent = True
             update_all_messages()
-            LOGGER.info(f'Changed gid from {gid} to {new_gid}')
+            LOGGER.info(f"Changed gid from {gid} to {new_gid}")
         else:
-            if dl: threading.Thread(target=dl.getListener().onDownloadComplete).start()
+            if dl:
+                threading.Thread(target=dl.getListener().onDownloadComplete).start()
 
     @new_thread
     def __onDownloadPause(self, api, gid):
         LOGGER.info(f"onDownloadPause: {gid}")
         dl = getDownloadByGid(gid)
-        dl.getListener().onDownloadError('Download stopped by user!')
+        dl.getListener().onDownloadError("Download stopped by user!")
 
     @new_thread
     def __onDownloadStopped(self, api, gid):
         LOGGER.info(f"onDownloadStop: {gid}")
         dl = getDownloadByGid(gid)
         if dl:
-            dl.getListener().onDownloadError('Download stopped by user!')
+            dl.getListener().onDownloadError("Download stopped by user!")
 
     @new_thread
     def __onDownloadError(self, api, gid):
-        sleep(0.5)  # sleep for split second to ensure proper dl gid update from onDownloadComplete
+        sleep(
+            0.5
+        )  # sleep for split second to ensure proper dl gid update from onDownloadComplete
         LOGGER.info(f"onDownloadError: {gid}")
         dl = getDownloadByGid(gid)
         download = api.get_download(gid)
         error = download.error_message
         LOGGER.info(f"Download Error: {error}")
-        if dl: dl.getListener().onDownloadError(error)
+        if dl:
+            dl.getListener().onDownloadError(error)
 
     def start_listener(self):
-        aria2.listen_to_notifications(threaded=True, on_download_start=self.__onDownloadStarted,
-                                      on_download_error=self.__onDownloadError,
-                                      on_download_pause=self.__onDownloadPause,
-                                      on_download_stop=self.__onDownloadStopped,
-                                      on_download_complete=self.__onDownloadComplete)
-
+        aria2.listen_to_notifications(
+            threaded=True,
+            on_download_start=self.__onDownloadStarted,
+            on_download_error=self.__onDownloadError,
+            on_download_pause=self.__onDownloadPause,
+            on_download_stop=self.__onDownloadStopped,
+            on_download_complete=self.__onDownloadComplete,
+        )
 
     def add_download(self, link: str, path, listener, filename):
         if is_magnet(link):
-            download = aria2.add_magnet(link, {'dir': path, 'out': filename})
+            download = aria2.add_magnet(link, {"dir": path, "out": filename})
         else:
-            download = aria2.add_uris([link], {'dir': path, 'out': filename})
-        if download.error_message: #no need to proceed further at this point
+            download = aria2.add_uris([link], {"dir": path, "out": filename})
+        if download.error_message:  # no need to proceed further at this point
             listener.onDownloadError(download.error_message)
             return
         with download_dict_lock:

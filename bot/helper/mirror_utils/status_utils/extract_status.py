@@ -1,5 +1,6 @@
+from bot.helper.ext_utils.bot_utils import MirrorStatus, get_readable_file_size
+
 from .status import Status
-from bot.helper.ext_utils.bot_utils import get_readable_file_size, MirrorStatus
 
 
 class ExtractStatus(Status):
@@ -12,10 +13,10 @@ class ExtractStatus(Status):
     # If this is possible in future,we should implement it
 
     def progress(self):
-        return '0'
+        return "0"
 
     def speed(self):
-        return '0'
+        return "0"
 
     def name(self):
         return self.__name
@@ -27,7 +28,7 @@ class ExtractStatus(Status):
         return get_readable_file_size(self.__size)
 
     def eta(self):
-        return '0s'
+        return "0s"
 
     def status(self):
         return MirrorStatus.STATUS_EXTRACTING

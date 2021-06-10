@@ -2,9 +2,10 @@ import logging
 import threading
 import time
 
-from bot import LOGGER, download_dict, download_dict_lock, app
-from .download_helper import DownloadHelper
+from bot import LOGGER, app, download_dict, download_dict_lock
+
 from ..status_utils.telegram_download_status import TelegramDownloadStatus
+from .download_helper import DownloadHelper
 
 global_lock = threading.Lock()
 GLOBAL_GID = set()
@@ -18,7 +19,7 @@ class TelegramDownloadHelper(DownloadHelper):
         self.__listener = listener
         self.__resource_lock = threading.RLock()
         self.__name = ""
-        self.__gid = ''
+        self.__gid = ""
         self.__start_time = time.time()
         self.__user_bot = app
         self.__is_cancelled = False
@@ -35,7 +36,9 @@ class TelegramDownloadHelper(DownloadHelper):
 
     def __onDownloadStart(self, name, size, file_id):
         with download_dict_lock:
-            download_dict[self.__listener.uid] = TelegramDownloadStatus(self, self.__listener)
+            download_dict[self.__listener.uid] = TelegramDownloadStatus(
+                self, self.__listener
+            )
         with global_lock:
             GLOBAL_GID.add(file_id)
         with self.__resource_lock:
@@ -46,7 +49,7 @@ class TelegramDownloadHelper(DownloadHelper):
 
     def __onDownloadProgress(self, current, total):
         if self.__is_cancelled:
-            self.__onDownloadError('Cancelled by user!')
+            self.__onDownloadError("Cancelled by user!")
             self.__user_bot.stop_transmission()
             return
         with self.__resource_lock:
@@ -70,13 +73,14 @@ class TelegramDownloadHelper(DownloadHelper):
         self.__listener.onDownloadComplete()
 
     def __download(self, message, path):
-        download = self.__user_bot.download_media(message,
-                                                  progress=self.__onDownloadProgress, file_name=path)
+        download = self.__user_bot.download_media(
+            message, progress=self.__onDownloadProgress, file_name=path
+        )
         if download is not None:
             self.__onDownloadComplete()
         else:
             if not self.__is_cancelled:
-                self.__onDownloadError('Internal error occurred')
+                self.__onDownloadError("Internal error occurred")
 
     def add_download(self, message, path, filename):
         _message = self.__user_bot.get_messages(message.chat.id, message.message_id)
@@ -97,13 +101,13 @@ class TelegramDownloadHelper(DownloadHelper):
                 path = path + name
             if download:
                 self.__onDownloadStart(name, media.file_size, media.file_id)
-                LOGGER.info(f'Downloading telegram file with id: {media.file_id}')
+                LOGGER.info(f"Downloading telegram file with id: {media.file_id}")
                 threading.Thread(target=self.__download, args=(_message, path)).start()
             else:
-                self.__onDownloadError('File already being downloaded!')
+                self.__onDownloadError("File already being downloaded!")
         else:
-            self.__onDownloadError('No document in the replied message')
+            self.__onDownloadError("No document in the replied message")
 
     def cancel_download(self):
-        LOGGER.info(f'Cancelling download on user request: {self.gid}')
+        LOGGER.info(f"Cancelling download on user request: {self.gid}")
         self.__is_cancelled = True
