@@ -24,6 +24,9 @@ class AriaDownloadStatus(Status):
 
     def __update(self):
         self.__download = get_download(self.__gid)
+        download = self.__download
+        if download.followed_by_ids:
+            self.__gid = download.followed_by_ids[0]
 
     def progress(self):
         """

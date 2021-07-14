@@ -36,6 +36,8 @@ class AriaDownloadHelper(DownloadHelper):
         if download.followed_by_ids:
             new_gid = download.followed_by_ids[0]
             new_download = api.get_download(new_gid)
+            if dl is None:
+                dl = getDownloadByGid(new_gid)
             with download_dict_lock:
                 download_dict[dl.uid()] = AriaDownloadStatus(new_gid, dl.getListener())
                 if new_download.is_torrent:
