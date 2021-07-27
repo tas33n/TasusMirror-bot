@@ -28,9 +28,10 @@ learn coding .
 
 ## Credits :-
 
-- First of all, full credit goes to [Shivam Jha aka
-  lzzy12](https://github.com/lzzy12) and [JaskaranSM aka Zero
-  Cool](https://github.com/jaskaranSM) They build up this bot from scratch.
+- First of all, full credit goes to
+  [Shivam Jha aka lzzy12](https://github.com/lzzy12) and
+  [JaskaranSM aka Zero Cool](https://github.com/jaskaranSM) They build up this
+  bot from scratch.
 - Then a huge thanks to [Sreeraj V R](https://github.com/SVR666) You can
   checkout his [repo here](https://github.com/SVR666/LoaderX-Bot)
 - Features added from [Sreeraj V R's](https://github.com/SVR666) repo -
@@ -41,8 +42,8 @@ learn coding .
 3. /list module will post search result on telegra.ph ```
 ````
 
-- Special thanks to [archie](https://github.com/archie9211) for very much
-  useful feature **Unzipmirror**
+- Special thanks to [archie](https://github.com/archie9211) for very much useful
+  feature **Unzipmirror**
 - Features added from [archie's](https://github.com/archie9211) repo
 
 ````
@@ -92,11 +93,11 @@ in JS.
 
 ```
 mirror - Start Mirroring
-tarmirror - Upload tar (zipped) file
+zipmirror - Upload zip (zipped) file
 unzipmirror - Extract files
 clone - copy folder to drive
 watch - mirror YT-DL support link
-tarwatch - mirror youtube playlist link as tar
+zipmirror - mirror youtube playlist link as zip
 cancel - Cancel a task
 cancelall - Cancel all tasks
 del - Delete file from Drive
@@ -127,8 +128,8 @@ cd mirror-bot
 sudo apt install python3
 ```
 
-Install Docker by following the [official docker
-docs](https://docs.docker.com/engine/install/debian/)
+Install Docker by following the
+[official docker docs](https://docs.docker.com/engine/install/debian/)
 
 - For Arch and it's derivatives:
 
@@ -168,21 +169,20 @@ Fill up rest of the fields. Meaning of each fields are discussed below:
 - **AUTO_DELETE_MESSAGE_DURATION** : Interval of time (in seconds), after which
   the bot deletes it's message (and command message) which is expected to be
   viewed instantly. Note: Set to -1 to never automatically delete messages
-- **IS_TEAM_DRIVE** : (Optional field) Set to "True" if GDRIVE_FOLDER_ID is
-  from a Team Drive else False or Leave it empty.
+- **IS_TEAM_DRIVE** : (Optional field) Set to "True" if GDRIVE_FOLDER_ID is from
+  a Team Drive else False or Leave it empty.
 - **USE_SERVICE_ACCOUNTS**: (Optional field) (Leave empty if unsure) Whether to
   use service accounts or not. For this to work see "Using service accounts"
   section below.
 - **INDEX_URL** : (Optional field) Refer to
-  https://github.com/maple3142/GDIndex/ The URL should not have any trailing
-  '/'
-- **API_KEY** : This is to authenticate to your telegram account for
-  downloading Telegram files. You can get this from https://my.telegram.org DO
-  NOT put this in quotes.
+  https://github.com/maple3142/GDIndex/ The URL should not have any trailing '/'
+- **API_KEY** : This is to authenticate to your telegram account for downloading
+  Telegram files. You can get this from https://my.telegram.org DO NOT put this
+  in quotes.
 - **API_HASH** : This is to authenticate to your telegram account for
   downloading Telegram files. You can get this from https://my.telegram.org
-- **MEGA_KEY**: Mega.nz api key to mirror mega.nz links. Get it from [Mega SDK
-  Page](https://mega.nz/sdk)
+- **MEGA_KEY**: Mega.nz api key to mirror mega.nz links. Get it from
+  [Mega SDK Page](https://mega.nz/sdk)
 - **MEGA_USERNAME**: Your email id you used to sign up on mega.nz for using
   premium accounts (Leave th)
 - **MEGA_PASSWORD**: Your password for your mega.nz account
@@ -209,8 +209,8 @@ MAX_CONCURRENT_DOWNLOADS in aria.sh. By default, it's set to 4
 
 ## Getting Google OAuth API credential file
 
-- Visit the [Google Cloud
-  Console](https://console.developers.google.com/apis/credentials)
+- Visit the
+  [Google Cloud Console](https://console.developers.google.com/apis/credentials)
 - Go to the OAuth Consent tab, fill it, and save.
 - Go to the Credentials tab and click Create Credentials -> OAuth Client ID
 - Choose Other and Create.
@@ -256,11 +256,10 @@ Using service accounts is only recommended while uploading to a team drive.
 
 account](https://cloud.google.com/iam/docs/service-accounts)
 
-Let us create only the service accounts that we need. **Warning:** abuse of
-this feature is not the aim of this project and we do **NOT** recommend that
-you make a lot of projects, just one project and 100 sa allow you plenty of
-use, its also possible that over abuse might get your projects banned by
-google.
+Let us create only the service accounts that we need. **Warning:** abuse of this
+feature is not the aim of this project and we do **NOT** recommend that you make
+a lot of projects, just one project and 100 sa allow you plenty of use, its also
+possible that over abuse might get your projects banned by google.
 
 Note: 1 service account can copy around 750gb a day, 1 project can make 100
 service accounts so that's 75tb a day, for most users this should easily
