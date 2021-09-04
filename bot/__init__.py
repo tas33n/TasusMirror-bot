@@ -8,6 +8,7 @@ import threading
 import time
 
 import aria2p
+import requests
 import telegram.ext as tg
 from dotenv import load_dotenv
 from pyrogram import Client
@@ -35,6 +36,10 @@ logging.basicConfig(
 load_dotenv("config.env")
 
 Interval = []
+
+DRIVES_NAMES = []
+DRIVES_IDS = []
+INDEX_URLS = []
 
 
 def getConfig(name: str):
@@ -152,8 +157,13 @@ try:
     INDEX_URL = getConfig("INDEX_URL")
     if len(INDEX_URL) == 0:
         INDEX_URL = None
+        INDEX_URLS.append(None)
+    else:
+        INDEX_URLS.append(INDEX_URL)
 except KeyError:
     INDEX_URL = None
+    INDEX_URLS.append(None)
+
 try:
     BUTTON_THREE_NAME = getConfig("BUTTON_THREE_NAME")
     BUTTON_THREE_URL = getConfig("BUTTON_THREE_URL")
@@ -207,6 +217,36 @@ try:
 except KeyError:
     SHORTENER = None
     SHORTENER_API = None
+
+try:
+    MULTI_SEARCH_URL = getConfig("MULTI_SEARCH_URL")
+    if len(MULTI_SEARCH_URL) == 0:
+        MULTI_SEARCH_URL = None
+    else:
+        res = requests.get(MULTI_SEARCH_URL)
+        if res.status_code == 200:
+            with open("drive_folder", "wb") as f:
+                f.truncate(0)
+                f.write(res.content)
+        else:
+            logging.error(res.status_code)
+            raise KeyError
+except KeyError:
+    pass
+
+DRIVES_NAMES.append("Main")
+DRIVES_IDS.append(parent_id)
+if os.path.exists("drive_folder"):
+    with open("drive_folder", "r+") as f:
+        lines = f.readlines()
+        for line in lines:
+            temp = line.strip().split()
+            DRIVES_NAMES.append(temp[0].replace("_", " "))
+            DRIVES_IDS.append(temp[1])
+            try:
+                INDEX_URLS.append(temp[2])
+            except IndexError:
+                INDEX_URLS.append(None)
 
 IGNORE_PENDING_REQUESTS = False
 try:
