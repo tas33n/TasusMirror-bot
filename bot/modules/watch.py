@@ -19,7 +19,7 @@ from bot.helper.telegram_helper.message_utils import (
 from .mirror import MirrorListener
 
 
-def _watch(bot: Bot, update, isZip=False):
+def _watch(bot: Bot, update, isTar=False, isZip=False):
     mssg = update.message.text
     message_args = mssg.split(" ")
     name_args = mssg.split("|")
@@ -52,7 +52,7 @@ def _watch(bot: Bot, update, isZip=False):
     reply_to = update.message.reply_to_message
     tag = reply_to.from_user.username if reply_to is not None else None
     pswd = ""
-    listener = MirrorListener(bot, update, pswd, isZip, tag)
+    listener = MirrorListener(bot, update, pswd, isTar, isZip, tag)
     ydl = YoutubeDLHelper(listener)
     threading.Thread(
         target=ydl.add_download,
@@ -65,8 +65,12 @@ def _watch(bot: Bot, update, isZip=False):
         )
 
 
+def watchTar(update, context):
+    _watch(context.bot, update, isTar=True)
+
+
 def watchZip(update, context):
-    _watch(context.bot, update, True)
+    _watch(context.bot, update, isZip=True)
 
 
 def watch(update, context):

@@ -67,8 +67,11 @@ ariaDlManager.start_listener()
 
 
 class MirrorListener(listeners.MirrorListeners):
-    def __init__(self, bot, update, pswd, isZip=False, tag=None, extract=False):
+    def __init__(
+        self, bot, update, pswd, isTar=False, isZip=False, tag=None, extract=False
+    ):
         super().__init__(bot, update)
+        self.isTar = isTar
         self.isZip = isZip
         self.tag = tag
         self.extract = extract
@@ -103,7 +106,10 @@ class MirrorListener(listeners.MirrorListeners):
             try:
                 with download_dict_lock:
                     download_dict[self.uid] = ZipStatus(name, m_path, size)
-                path = fs_utils.zip(name, m_path)
+                if self.isZip:
+                    path = fs_utils.zip(name, m_path)
+                else:
+                    path = fs_utils.tar(m_path)
             except FileNotFoundError:
                 LOGGER.info("File to archive not found!")
                 self.onUploadError("Internal error occurred!!")
@@ -245,7 +251,7 @@ class MirrorListener(listeners.MirrorListeners):
             update_all_messages()
 
 
-def _mirror(bot, update, isZip=False, extract=False):
+def _mirror(bot, update, isTar=False, isZip=False, extract=False):
     mesg = update.message.text.split("\n")
     message_args = mesg[0].split(" ")
     name_args = mesg[0].split("|")
@@ -294,7 +300,7 @@ def _mirror(bot, update, isZip=False, extract=False):
             or len(link) == 0
         ) and file is not None:
             if file.mime_type != "application/x-bittorrent":
-                listener = MirrorListener(bot, update, pswd, isZip, tag, extract)
+                listener = MirrorListener(bot, update, pswd, isTar, isZip, tag, extract)
                 tg_downloader = TelegramDownloadHelper(listener)
                 tg_downloader.add_download(
                     reply_to, f"{DOWNLOAD_DIR}{listener.uid}/", name
@@ -319,7 +325,7 @@ def _mirror(bot, update, isZip=False, extract=False):
         link = direct_link_generator(link)
     except DirectDownloadLinkException as e:
         LOGGER.info(f"{link}: {e}")
-    listener = MirrorListener(bot, update, pswd, isZip, tag, extract)
+    listener = MirrorListener(bot, update, pswd, isTar, isZip, tag, extract)
     if bot_utils.is_gdrive_link(link):
         if not isZip and not extract:
             sendMessage(
@@ -368,8 +374,12 @@ def mirror(update, context):
     _mirror(context.bot, update)
 
 
+def tar_mirror(update, context):
+    _mirror(context.bot, update, isTar=True)
+
+
 def zip_mirror(update, context):
-    _mirror(context.bot, update, True)
+    _mirror(context.bot, update, isZip=True)
 
 
 def unzip_mirror(update, context):
@@ -379,6 +389,12 @@ def unzip_mirror(update, context):
 mirror_handler = CommandHandler(
     BotCommands.MirrorCommand,
     mirror,
+    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+    run_async=True,
+)
+tar_mirror_handler = CommandHandler(
+    BotCommands.TarMirrorCommand,
+    tar_mirror,
     filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
     run_async=True,
 )
@@ -395,5 +411,6 @@ unzip_mirror_handler = CommandHandler(
     run_async=True,
 )
 dispatcher.add_handler(mirror_handler)
+dispatcher.add_handler(tar_mirror_handler)
 dispatcher.add_handler(zip_mirror_handler)
 dispatcher.add_handler(unzip_mirror_handler)

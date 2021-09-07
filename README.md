@@ -93,11 +93,13 @@ in JS.
 
 ```
 mirror - Start Mirroring
+tarmirror - Upload tar (zipped) file
 zipmirror - Upload zip (zipped) file
 unzipmirror - Extract files
 clone - copy folder to drive
 watch - mirror YT-DL support link
-zipmirror - mirror youtube playlist link as zip
+tarwatch - mirror youtube playlist link as tar
+zipwatch - mirror youtube playlist link as zip
 cancel - Cancel a task
 cancelall - Cancel all tasks
 del - Delete file from Drive
