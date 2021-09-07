@@ -120,6 +120,27 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
     sendMessage(help_string, context.bot, update)
 
 
+botcmds = [
+    (f"{BotCommands.HelpCommand}", "Get detailed help"),
+    (f"{BotCommands.MirrorCommand}", "Start mirroring"),
+    (f"{BotCommands.TarMirrorCommand}", "Start mirroring and upload as .tar"),
+    (f"{BotCommands.ZipMirrorCommand}", "Start mirroring and upload as .zip"),
+    (f"{BotCommands.UnzipMirrorCommand}", "Extract files"),
+    (f"{BotCommands.CloneCommand}", "Copy file/folder from GDrive"),
+    (f"{BotCommands.deleteCommand}", "Delete file from GDrive [owner only]"),
+    (f"{BotCommands.WatchCommand}", "Mirror Youtube-dl support link"),
+    (f"{BotCommands.TarWatchCommand}", "Mirror Youtube playlist link as .tar"),
+    (f"{BotCommands.ZipWatchCommand}", "Mirror Youtube playlist link as .zip"),
+    (f"{BotCommands.CancelMirror}", "Cancel a task"),
+    (f"{BotCommands.CancelAllCommand}", "Cancel all tasks [owner only]"),
+    (f"{BotCommands.StatusCommand}", "Get mirror status"),
+    (f"{BotCommands.StatsCommand}", "Bot usage stats"),
+    (f"{BotCommands.PingCommand}", "Ping the bot"),
+    (f"{BotCommands.RestartCommand}", "Restart the bot [owner only]"),
+    (f"{BotCommands.LogCommand}", "Get the bot log [owner only]"),
+]
+
+
 def main():
     fs_utils.start_cleanup()
     # Check if the bot is restarting
@@ -128,6 +149,7 @@ def main():
             chat_id, msg_id = map(int, f)
         bot.edit_message_text("Restarted successfully!", chat_id, msg_id)
         os.remove(".restartmsg")
+    bot.set_my_commands(botcmds)
 
     start_handler = CommandHandler(
         BotCommands.StartCommand,
