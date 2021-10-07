@@ -98,7 +98,7 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
 
 /{BotCommands.WatchCommand} [youtube-dl supported link]: Mirror through youtube-dl. Click /{BotCommands.WatchCommand} for more help.
 
-/{BotCommands.ZipWatch} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
+/{BotCommands.ZipWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
 
 /{BotCommands.CancelMirror} : Reply to the message by which the download was initiated and that download will be cancelled
 
@@ -119,13 +119,11 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
 botcmds = [
     (f"{BotCommands.HelpCommand}", "Get detailed help"),
     (f"{BotCommands.MirrorCommand}", "Start mirroring"),
-    (f"{BotCommands.TarMirrorCommand}", "Start mirroring and upload as .tar"),
     (f"{BotCommands.ZipMirrorCommand}", "Start mirroring and upload as .zip"),
     (f"{BotCommands.UnzipMirrorCommand}", "Extract files"),
     (f"{BotCommands.CloneCommand}", "Copy file/folder from GDrive"),
     (f"{BotCommands.deleteCommand}", "Delete file from GDrive [owner only]"),
     (f"{BotCommands.WatchCommand}", "Mirror Youtube-dl support link"),
-    (f"{BotCommands.TarWatchCommand}", "Mirror Youtube playlist link as .tar"),
     (f"{BotCommands.ZipWatchCommand}", "Mirror Youtube playlist link as .zip"),
     (f"{BotCommands.CancelMirror}", "Cancel a task"),
     (f"{BotCommands.CancelAllCommand}", "Cancel all tasks [owner only]"),
