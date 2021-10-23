@@ -7,8 +7,8 @@ from sys import executable
 import psutil
 from pyrogram import idle
 from telegram.ext import CommandHandler
-
-from bot import IGNORE_PENDING_REQUESTS, app, bot, botStartTime, dispatcher, updater
+from telegram import ParseMode
+from bot import IGNORE_PENDING_REQUESTS, app, bot, botStartTime, dispatcher, updater, OWNER_ID, AUTHORIZED_CHATS
 from bot.helper.ext_utils import fs_utils
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time
 from bot.helper.telegram_helper.bot_commands import BotCommands
@@ -28,6 +28,7 @@ from bot.modules import (  # noqa
     mirror,
     mirror_status,
     watch,
+    leech_settings,
 )
 
 
@@ -119,6 +120,13 @@ Plzzz see this for full use of this command https://telegra.ph/Magneto-Python-Ar
 botcmds = [
     (f"{BotCommands.HelpCommand}", "Get detailed help"),
     (f"{BotCommands.MirrorCommand}", "Start mirroring"),
+    (f"{BotCommands.LeechCommand}", "Start Leeching"),
+    (f"{BotCommands.UnzipLeechCommand}", "Extract files(Leech)"),
+    (f"{BotCommands.LeechWatchCommand}", "Mirror Youtube-dl support link(Leech)"),
+    (f"{BotCommands.LeechTarWatchCommand}", "Mirror Youtube playlist link as .zip(Leech)"),
+    (f"{BotCommands.LeechZipWatchCommand}", "Mirror Youtube playlist link as .zip(Leech)"),
+    (f"{BotCommands.ZipLeechCommand}", "Start mirroring and upload as .zip(Leech)"),
+    (f"{BotCommands.UnzipLeechCommand}", "Extract files(Leech)"),
     (f"{BotCommands.ZipMirrorCommand}", "Start mirroring and upload as .zip"),
     (f"{BotCommands.UnzipMirrorCommand}", "Extract files"),
     (f"{BotCommands.CloneCommand}", "Copy file/folder from GDrive"),
@@ -143,6 +151,15 @@ def main():
             chat_id, msg_id = map(int, f)
         bot.edit_message_text("Restarted successfully!", chat_id, msg_id)
         os.remove(".restartmsg")
+    elif OWNER_ID:
+        try:
+            text = "<i><b>Bot Started Successfully!\nModded With ❤️ By PeruNoob!</b></i>"
+            bot.sendMessage(chat_id=OWNER_ID, text=text, parse_mode=ParseMode.HTML)
+            if AUTHORIZED_CHATS:
+                for i in AUTHORIZED_CHATS:
+                    bot.sendMessage(chat_id=i, text=text, parse_mode=ParseMode.HTML)
+        except Exception as e:
+            LOGGER.warning(e)    
     bot.set_my_commands(botcmds)
 
     start_handler = CommandHandler(

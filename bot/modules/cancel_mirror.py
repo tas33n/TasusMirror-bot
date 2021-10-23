@@ -45,6 +45,8 @@ def cancel_mirror(update, context):
     elif dl.status() == "Archiving":
         sendMessage("Archival in Progress, Don't Cancel it.", context.bot, update)
         return
+    elif dl.status() == MirrorStatus.STATUS_SPLITTING:
+        sendMessage("Split in Progress, You Can't Cancel It.", context.bot, update)    
     else:
         dl.download().cancel_download()
     sleep(1)  # Wait a Second For Aria2 To free Resources.

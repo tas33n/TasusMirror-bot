@@ -19,6 +19,14 @@ class _BotCommands:
         self.WatchCommand = "watch"
         self.ZipWatchCommand = "zipwatch"
         self.deleteCommand = "del"
-
+        self.LeechSetCommand = 'leechset'
+        self.SetThumbCommand = 'setthumb'
+        self.LeechCommand = 'leech'
+        self.TarLeechCommand = 'tarleech'
+        self.UnzipLeechCommand = 'unzipleech'
+        self.ZipLeechCommand = 'zipleech'
+        self.LeechWatchCommand = 'leechwatch'
+        self.LeechTarWatchCommand = 'leechtarwatch'
+        self.LeechZipWatchCommand = 'leechzipwatch'
 
 BotCommands = _BotCommands()

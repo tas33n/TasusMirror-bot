@@ -4,7 +4,7 @@ import threading
 import time
 
 from bot import download_dict, download_dict_lock
-
+from bot.helper.telegram_helper.bot_commands import BotCommands
 LOGGER = logging.getLogger(__name__)
 
 MAGNET_REGEX = r"magnet:\?xt=urn:btih:[a-zA-Z0-9]*"
@@ -20,6 +20,7 @@ class MirrorStatus:
     STATUS_CANCELLED = "Cancelled."
     STATUS_ARCHIVING = "Archiving..."
     STATUS_EXTRACTING = "Extracting..."
+    STATUS_SPLITTING = "Splitting..."
 
 
 PROGRESS_MAX_SIZE = 100 // 8
@@ -69,6 +70,7 @@ def getDownloadByGid(gid):
                     MirrorStatus.STATUS_UPLOADING,
                     MirrorStatus.STATUS_ARCHIVING,
                     MirrorStatus.STATUS_EXTRACTING,
+                    MirrorStatus.STATUS_SPLITTING,
                 ]
                 and dl.gid() == gid
             ):
@@ -89,8 +91,6 @@ def get_progress_bar_string(status):
     p_str += "○" * (PROGRESS_MAX_SIZE - cFull)
     p_str = f"[{p_str}]"
     return p_str
-
-
 def get_readable_message():
     with download_dict_lock:
         msg = ""
@@ -100,6 +100,7 @@ def get_readable_message():
             if download.status() not in [
                 MirrorStatus.STATUS_ARCHIVING,
                 MirrorStatus.STATUS_EXTRACTING,
+                MirrorStatus.STATUS_SPLITTING,
             ]:
                 msg += f"\n<code>{get_progress_bar_string(download)} {download.progress()}</code>"
                 if download.status() == MirrorStatus.STATUS_DOWNLOADING:
@@ -119,7 +120,6 @@ def get_readable_message():
                 msg += f"\n<b>GID:</b> <code>{download.gid()}</code>"
             msg += "\n\n"
         return msg
-
 
 def get_readable_time(seconds: int) -> str:
     result = ""
