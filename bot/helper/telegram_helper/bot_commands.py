@@ -4,6 +4,7 @@ class _BotCommands:
         self.MirrorCommand = "mirror"
         self.UnzipMirrorCommand = "unzipmirror"
         self.ZipMirrorCommand = "zipmirror"
+        self.TarMirrorCommand = "tarmirror"
         self.CancelMirror = "cancel"
         self.CancelAllCommand = "cancelall"
         self.ListCommand = "list"
@@ -18,6 +19,7 @@ class _BotCommands:
         self.CloneCommand = "clone"
         self.WatchCommand = "watch"
         self.ZipWatchCommand = "zipwatch"
+        self.TarWatchCommand = "tarwatch"
         self.deleteCommand = "del"
         self.LeechSetCommand = 'leechset'
         self.SetThumbCommand = 'setthumb'

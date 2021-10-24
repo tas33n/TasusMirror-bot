@@ -1,7 +1,8 @@
 import os
 import shutil
 import sys
-
+import pathlib
+import tarfile
 import magic
 
 from bot import DOWNLOAD_DIR, LOGGER, aria2
@@ -63,15 +64,14 @@ def get_path_size(path):
             total_size += os.path.getsize(abs_path)
     return total_size
 
-
-def zip(name, path):
-    root_dir = os.path.dirname(path)
-    base_dir = os.path.basename(path.strip(os.sep))
-    zip_file = shutil.make_archive(name, "zip", root_dir, base_dir)
-    zip_path = shutil.move(zip_file, root_dir)
-    LOGGER.info(f"Zip: {zip_path}")
-    return zip_path
-
+def tar(org_path):
+    tar_path = org_path + ".tar"
+    path = pathlib.PurePath(org_path)
+    LOGGER.info(f"Tar: orig_path: {org_path}, tar_path: {tar_path}")
+    tar = tarfile.open(tar_path, "w")
+    tar.add(org_path, arcname=path.name)
+    tar.close()
+    return tar_path
 
 def get_base_name(orig_path: str):
     if orig_path.endswith(".tar.bz2"):

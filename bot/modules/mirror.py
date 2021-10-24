@@ -54,7 +54,7 @@ from bot.helper.mirror_utils.status_utils import listeners
 from bot.helper.mirror_utils.status_utils.extract_status import ExtractStatus
 from bot.helper.mirror_utils.status_utils.gdownload_status import DownloadStatus
 from bot.helper.mirror_utils.status_utils.upload_status import UploadStatus
-from bot.helper.mirror_utils.status_utils.zip_status import ZipStatus
+from bot.helper.mirror_utils.status_utils.tar_status import TarStatus
 from bot.helper.mirror_utils.upload_utils import gdriveTools, pyrogramEngine
 from bot.helper.telegram_helper import button_build
 from bot.helper.telegram_helper.bot_commands import BotCommands
@@ -72,10 +72,11 @@ ariaDlManager.start_listener()
 
 
 class MirrorListener(listeners.MirrorListeners):
-    def __init__(self, bot, update, pswd, isZip=False, tag=None, extract=False, isLeech=False):
+    def __init__(self, bot, update, pswd, isTar=False, isZip=False, tag=None, extract=False, isLeech=False):
         super().__init__(bot, update)
         self.isZip = isZip
         self.tag = tag
+        self.isTar = isTar
         self.extract = extract
         self.pswd = pswd
         self.isLeech = isLeech
@@ -104,12 +105,17 @@ class MirrorListener(listeners.MirrorListeners):
             if name is None:  # when pyrogram's media.file_name is of NoneType
                 name = os.listdir(f"{DOWNLOAD_DIR}{self.uid}")[0]
             m_path = f"{DOWNLOAD_DIR}{self.uid}/{name}"
-        if self.isZip:
+        if self.isTar:
             download.is_archiving = True
             try:
                 with download_dict_lock:
-                    download_dict[self.uid] = ZipStatus(name, m_path, size)
-                path = fs_utils.zip(name, m_path)
+                    download_dict[self.uid] = TarStatus(name, m_path, size)
+                if self.isZip:
+                    path = m_path + ".zip"
+                    LOGGER.info(f'Zip: orig_path: {m_path}, zip_path: {path}')
+                    subprocess.run(["7z", "a", path, m_path])
+                else:
+                    path = fs_utils.tar(m_path)
             except FileNotFoundError:
                 LOGGER.info("File to archive not found!")
                 self.onUploadError("Internal error occurred!!")
@@ -310,7 +316,7 @@ class MirrorListener(listeners.MirrorListeners):
             update_all_messages()
 
 
-def _mirror(bot, update, isZip=False, extract=False, isLeech=False):
+def _mirror(bot, update,isTar=False, isZip=False, extract=False, isLeech=False):
     mesg = update.message.text.split("\n")
     message_args = mesg[0].split(" ")
     name_args = mesg[0].split("|")
@@ -359,7 +365,7 @@ def _mirror(bot, update, isZip=False, extract=False, isLeech=False):
             or len(link) == 0
         ) and file is not None:
             if file.mime_type != "application/x-bittorrent":
-                listener = MirrorListener(bot, update, pswd, isZip, tag, extract, isLeech=isLeech)
+                listener = MirrorListener(bot, update, pswd,isTar, isZip, tag, extract, isLeech=isLeech)
                 tg_downloader = TelegramDownloadHelper(listener)
                 tg_downloader.add_download(
                     reply_to, f"{DOWNLOAD_DIR}{listener.uid}/", name
@@ -384,9 +390,9 @@ def _mirror(bot, update, isZip=False, extract=False, isLeech=False):
         link = direct_link_generator(link)
     except DirectDownloadLinkException as e:
         LOGGER.info(f"{link}: {e}")
-    listener = MirrorListener(bot, update, pswd, isZip, tag, extract, isLeech)
+    listener = MirrorListener(bot, update, pswd, isTar, isZip, tag, extract, isLeech)
     if bot_utils.is_gdrive_link(link):
-        if not isZip and not extract and not isLeech:
+        if not isZip and not isTar and not extract and not isLeech:
             sendMessage(
                 f"Use /{BotCommands.CloneCommand} To Copy File/Folder", bot, update
             )
@@ -432,10 +438,11 @@ def _mirror(bot, update, isZip=False, extract=False, isLeech=False):
 def mirror(update, context):
     _mirror(context.bot, update)
 
+def tar_mirror(update, context):
+    _mirror(context.bot, update, isTar=True)
 
 def zip_mirror(update, context):
-    _mirror(context.bot, update, True)
-
+    _mirror(context.bot, update, True, isZip=True)    
 
 def unzip_mirror(update, context):
     _mirror(context.bot, update, extract=True)
@@ -444,13 +451,13 @@ def leech(update, context):
     _mirror(context.bot, update, isLeech=True)
 
 def tar_leech(update, context):
-    _mirror(context.bot, update, True, isLeech=True)
+    _mirror(context.bot, update, isTar=True, isLeech=True)
 
 def unzip_leech(update, context):
     _mirror(context.bot, update, extract=True, isLeech=True)
 
 def zip_leech(update, context):
-    _mirror(context.bot, update, True, isLeech=True)
+    _mirror(context.bot, update, True, True, isLeech=True)
 
 
 mirror_handler = CommandHandler(
@@ -462,6 +469,12 @@ mirror_handler = CommandHandler(
 zip_mirror_handler = CommandHandler(
     BotCommands.ZipMirrorCommand,
     zip_mirror,
+    filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
+    run_async=True,
+)
+tar_mirror_handler = CommandHandler(
+    BotCommands.TarMirrorCommand,
+    tar_mirror,
     filters=CustomFilters.authorized_chat | CustomFilters.authorized_user,
     run_async=True,
 )
@@ -486,3 +499,4 @@ dispatcher.add_handler(leech_handler)
 dispatcher.add_handler(tar_leech_handler)
 dispatcher.add_handler(unzip_leech_handler)
 dispatcher.add_handler(zip_leech_handler)
+dispatcher.add_handler(tar_mirror_handler)

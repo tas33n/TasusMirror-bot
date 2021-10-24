@@ -65,17 +65,22 @@ if os.path.exists('drive_folder'):
             except IndexError as e:
                 UNI_INDEX_URL.append(None)
 try:
-    RECURSIVE_SEARCH = getConfig('RECURSIVE_SEARCH')
-    RECURSIVE_SEARCH = RECURSIVE_SEARCH.lower() == 'true'
+    RECURSIVE_SEARCH = getConfig("RECURSIVE_SEARCH")
+    if RECURSIVE_SEARCH.lower() == "true":
+        RECURSIVE_SEARCH = True
+    else:
+        RECURSIVE_SEARCH = False
 except KeyError:
-    RECURSIVE_SEARCH = False    
+    RECURSIVE_SEARCH = False
+                
 
-if RECURSIVE_SEARCH and DRIVE_ID :
-    pass
-else :
-    LOGGER.error("Fill Drive_Folder File For Multi Drive Search!")
-    exit(1)    
-    
+if RECURSIVE_SEARCH:
+    if DRIVE_ID:
+        pass
+    else :
+        LOGGER.error("Fill Drive_Folder File For Multi Drive Search!")
+        exit(1)    
+        
 
 aria2 = aria2p.API(
     aria2p.Client(
