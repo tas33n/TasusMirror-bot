@@ -1,6 +1,6 @@
 from telegram.ext import CommandHandler
 
-from bot import LOGGER, dispatcher
+from bot import LOGGER, RECURSIVE_SEARCH, dispatcher
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
@@ -13,7 +13,10 @@ def list_drive(update, context):
         LOGGER.info(f"Searching: {search}")
         reply = sendMessage("Searching..... Please wait!", context.bot, update)
         gdrive = GoogleDriveHelper(None)
-        msg, button = gdrive.drive_list(search)
+        if RECURSIVE_SEARCH:  
+            msg, button = gdrive.uni_drive_list(search)
+        else:
+            msg, button = gdrive.drive_list(search) 
 
         if button:
             editMessage(msg, reply, button)

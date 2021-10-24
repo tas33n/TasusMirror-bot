@@ -386,7 +386,7 @@ def _mirror(bot, update, isZip=False, extract=False, isLeech=False):
         LOGGER.info(f"{link}: {e}")
     listener = MirrorListener(bot, update, pswd, isZip, tag, extract, isLeech)
     if bot_utils.is_gdrive_link(link):
-        if not isZip and not extract:
+        if not isZip and not extract and not isLeech:
             sendMessage(
                 f"Use /{BotCommands.CloneCommand} To Copy File/Folder", bot, update
             )

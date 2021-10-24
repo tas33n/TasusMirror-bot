@@ -35,8 +35,6 @@ logging.basicConfig(
 load_dotenv("config.env")
 
 Interval = []
-
-
 def getConfig(name: str):
     return os.environ[name]
 
@@ -49,6 +47,35 @@ try:
         exit()
 except KeyError:
     pass
+
+#RECURSIVE SEARCH
+DRIVE_NAME = []
+DRIVE_ID = []
+UNI_INDEX_URL = []
+
+if os.path.exists('drive_folder'):
+    with open('drive_folder', 'r+') as f:
+        lines = f.readlines()
+        for line in lines:
+            temp = line.strip().split()
+            DRIVE_NAME.append(temp[0].replace("_", " "))
+            DRIVE_ID.append(temp[1])
+            try:
+                UNI_INDEX_URL.append(temp[2])
+            except IndexError as e:
+                UNI_INDEX_URL.append(None)
+try:
+    RECURSIVE_SEARCH = getConfig('RECURSIVE_SEARCH')
+    RECURSIVE_SEARCH = RECURSIVE_SEARCH.lower() == 'true'
+except KeyError:
+    RECURSIVE_SEARCH = False    
+
+if RECURSIVE_SEARCH and DRIVE_ID :
+    pass
+else :
+    LOGGER.error("Fill Drive_Folder File For Multi Drive Search!")
+    exit(1)    
+    
 
 aria2 = aria2p.API(
     aria2p.Client(
@@ -230,6 +257,7 @@ try:
     AS_DOCUMENT = AS_DOCUMENT.lower() == 'true'
 except KeyError:
     AS_DOCUMENT = False
+
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot
 dispatcher = updater.dispatcher
