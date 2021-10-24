@@ -42,6 +42,7 @@ from bot import (
     download_dict,
     parent_id,
     telegraph_token,
+    VIEW_LINK,
 )
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, setInterval, time
 from bot.helper.ext_utils.fs_utils import get_mime_type, get_path_size
@@ -512,6 +513,7 @@ class GoogleDriveHelper:
                 if INDEX_URL is not None:
                     url_path = requests.utils.quote(f'{file.get("name")}')
                     url = f"{INDEX_URL}/{url_path}"
+                    urls = f'{INDEX_URL}/{url_path}?a=view'
                     if SHORTENER is not None and SHORTENER_API is not None:
                         siurl = requests.get(
                             f"https://{SHORTENER}/api?api={SHORTENER_API}&url={url}&format=text"
@@ -519,6 +521,8 @@ class GoogleDriveHelper:
                         buttons.buildbutton("Index Link", siurl)
                     else:
                         buttons.buildbutton("Index Link", url)
+                        if VIEW_LINK:
+                            buttons.buildbutton("🌐 View Link", urls)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
@@ -898,7 +902,10 @@ class GoogleDriveHelper:
                         if UNI_INDEX_URL[INDEX] is not None:
                             url_path = requests.utils.quote(f'{file.get("name")}')
                             url = f'{UNI_INDEX_URL[INDEX]}/{url_path}'
+                            urls = f'{INDEX_URL}/{url_path}?a=view'
                             msg += f'<b> | <a href="{url}">Index link</a></b>'
+                        if VIEW_LINK:
+                            msg += f' <b>| <a href="{urls}">View Link</a></b>'    
                     msg += '<br><br>'
                     content_count += 1
                     if (content_count >= TELEGRAPHLIMIT):
@@ -991,6 +998,7 @@ class GoogleDriveHelper:
                 if INDEX_URL is not None:
                     url_path = requests.utils.quote(f'{file.get("name")}')
                     url = f"{INDEX_URL}/{url_path}"
+                    urls = f'{INDEX_URL}/{url_path}?a=view'
                     if SHORTENER is not None and SHORTENER_API is not None:
                         siurl = requests.get(
                             f"https://{SHORTENER}/api?api={SHORTENER_API}&url={url}&format=text"
@@ -998,6 +1006,9 @@ class GoogleDriveHelper:
                         msg += f' <b>| <a href="{siurl}">Index Link</a></b>'
                     else:
                         msg += f' <b>| <a href="{url}">Index Link</a></b>'
+                        if VIEW_LINK:
+                            msg += f' <b>| <a href="{urls}">View Link</a></b>'
+                        
             msg += "<br><br>"
             content_count += 1
             if content_count == TELEGRAPHLIMIT:

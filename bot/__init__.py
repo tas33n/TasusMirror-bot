@@ -263,6 +263,16 @@ try:
 except KeyError:
     AS_DOCUMENT = False
 
+#VIEW_LINK
+try:
+    VIEW_LINK = getConfig('VIEW_LINK')
+    if VIEW_LINK.lower() == 'true':
+        VIEW_LINK = True
+    else:
+        VIEW_LINK = False
+except KeyError:
+    VIEW_LINK = False
+    
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot
 dispatcher = updater.dispatcher

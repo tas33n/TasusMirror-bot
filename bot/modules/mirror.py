@@ -32,6 +32,7 @@ from bot import (
     download_dict,
     download_dict_lock,
     TG_SPLIT_SIZE,
+    VIEW_LINK,
 
 )
 from bot.helper.ext_utils import bot_utils, fs_utils
@@ -263,6 +264,7 @@ class MirrorListener(listeners.MirrorListeners):
             if INDEX_URL is not None:
                 url_path = requests.utils.quote(f"{download_dict[self.uid].name()}")
                 share_url = f"{INDEX_URL}/{url_path}"
+                share_urls = f'{INDEX_URL}/{url_path}?a=view'
                 if os.path.isdir(
                     f"{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}"
                 ):
@@ -271,9 +273,14 @@ class MirrorListener(listeners.MirrorListeners):
                     siurl = requests.get(
                         f"https://{SHORTENER}/api?api={SHORTENER_API}&url={share_url}&format=text"
                     ).text
+                    siurls = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_urls}&format=text').text
                     buttons.buildbutton("Index Link", siurl)
+                    if VIEW_LINK:
+                        buttons.buildbutton("🌐 View Link", siurls)
                 else:
                     buttons.buildbutton("Index Link", share_url)
+                    if VIEW_LINK:
+                        buttons.buildbutton("🌐 View Link", share_urls)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
