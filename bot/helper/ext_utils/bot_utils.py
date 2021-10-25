@@ -21,6 +21,7 @@ class MirrorStatus:
     STATUS_ARCHIVING = "Archiving..."
     STATUS_EXTRACTING = "Extracting..."
     STATUS_SPLITTING = "Splitting..."
+    STATUS_CLONING = "Cloning..."
 
 
 PROGRESS_MAX_SIZE = 100 // 8
@@ -45,6 +46,18 @@ class setInterval:
 
     def cancel(self):
         self.stopEvent.set()
+
+def check_limit(size, limit):
+    LOGGER.info('Checking File/Folder Size...')
+    if limit is not None:
+        limit = limit.split(' ', maxsplit=1)
+        limitint = int(limit[0])
+        if 'G' in limit[1] or 'g' in limit[1]:
+            if size > limitint * 1024**3:
+                return True
+        elif 'T' in limit[1] or 't' in limit[1]:
+            if size > limitint * 1024**4:
+                return True        
 
 
 def get_readable_file_size(size_in_bytes) -> str:
@@ -105,9 +118,12 @@ def get_readable_message():
                 msg += f"\n<code>{get_progress_bar_string(download)} {download.progress()}</code>"
                 if download.status() == MirrorStatus.STATUS_DOWNLOADING:
                     msg += f"\n<b>Downloaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                elif download.status() == MirrorStatus.STATUS_CLONING:
+                    msg += f"\n<b>Cloned:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"    
                 else:
                     msg += f"\n<b>Uploaded:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
-                msg += f"\n<b>Speed:</b> {download.speed()}, \n<b>ETA:</b> {download.eta()} "
+                msg += f"\n<b>Speed:</b> {download.speed()}" \
+                        f", <b>ETA:</b> {download.eta()} "
                 # if hasattr(download, 'is_torrent'):
                 try:
                     msg += (

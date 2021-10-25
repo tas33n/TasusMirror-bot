@@ -272,7 +272,23 @@ try:
         VIEW_LINK = False
 except KeyError:
     VIEW_LINK = False
-    
+#CLONE
+try:
+    CLONE_LIMIT = getConfig('CLONE_LIMIT')
+    if len(CLONE_LIMIT) == 0:
+        CLONE_LIMIT = None
+except KeyError:
+    CLONE_LIMIT = None
+
+try:
+    STOP_DUPLICATE_CLONE = getConfig('STOP_DUPLICATE_CLONE')
+    if STOP_DUPLICATE_CLONE.lower() == 'true':
+        STOP_DUPLICATE_CLONE = True
+    else:
+        STOP_DUPLICATE_CLONE = False
+except KeyError:
+    STOP_DUPLICATE_CLONE = False
+
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot
 dispatcher = updater.dispatcher

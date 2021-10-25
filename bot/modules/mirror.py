@@ -404,7 +404,7 @@ def _mirror(bot, update,isTar=False, isZip=False, extract=False, isLeech=False):
                 f"Use /{BotCommands.CloneCommand} To Copy File/Folder", bot, update
             )
             return
-        res, size, name = gdriveTools.GoogleDriveHelper().clonehelper(link)
+        res, size, name, files = gdriveTools.GoogleDriveHelper().clonehelper(link)
         if res != "":
             sendMessage(res, bot, update)
             return
