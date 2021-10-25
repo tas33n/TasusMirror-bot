@@ -327,6 +327,8 @@ class GoogleDriveHelper:
             return msg
 
     def upload(self, file_name: str):
+        self.is_downloading = False
+        self.is_uploading = True
         if USE_SERVICE_ACCOUNTS:
             self.service_account_count = len(os.listdir("accounts"))
         self.__listener.onUploadStarted()
@@ -339,9 +341,10 @@ class GoogleDriveHelper:
             try:
                 mime_type = get_mime_type(file_path)
                 link = self.upload_file(file_path, file_name, mime_type, parent_id)
+                if self.is_cancelled:
+                    return
                 if link is None:
                     raise Exception("Upload has been manually cancelled")
-                LOGGER.info("Uploaded To G-Drive: " + file_path)
             except Exception as e:
                 if isinstance(e, RetryError):
                     LOGGER.info(f"Total Attempts: {e.last_attempt.attempt_number}")
@@ -353,6 +356,8 @@ class GoogleDriveHelper:
                 return
             finally:
                 self.updater.cancel()
+                if self.is_cancelled:
+                    return
         else:
             try:
                 dir_id = self.create_directory(
@@ -361,8 +366,13 @@ class GoogleDriveHelper:
                 result = self.upload_dir(file_path, dir_id)
                 if result is None:
                     raise Exception("Upload has been manually cancelled!")
-                LOGGER.info("Uploaded To G-Drive: " + file_name)
                 link = f"https://drive.google.com/folderview?id={dir_id}"
+                if self.is_cancelled:
+                    LOGGER.info("Deleting uploaded data from drive...")
+                    msg = self.deletefile(link)
+                    LOGGER.info(f"{msg}")
+                    return
+                LOGGER.info("Uploaded To G-Drive: " + file_name)
             except Exception as e:
                 if isinstance(e, RetryError):
                     LOGGER.info(f"Total Attempts: {e.last_attempt.attempt_number}")
@@ -374,6 +384,8 @@ class GoogleDriveHelper:
                 return
             finally:
                 self.updater.cancel()
+                if self.is_cancelled:
+                    return
         files = self.total_files
         folders = self.total_folders
         typ = self.typee
@@ -853,6 +865,9 @@ class GoogleDriveHelper:
             self.__listener.onDownloadError('Download stopped by user!')
         elif self.is_cloning:
             LOGGER.info(f"Cancelling Clone: {self.name}")
+        elif self.is_uploading:
+            LOGGER.info(f"Cancelling upload: {self.name}")
+            self.__listener.onUploadError('your upload has been stopped and uploaded data has been deleted!')    
 
 
     def uni_drive_list(self, fileName):

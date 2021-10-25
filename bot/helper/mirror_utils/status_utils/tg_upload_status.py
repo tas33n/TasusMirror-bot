@@ -8,11 +8,12 @@ from bot import DOWNLOAD_DIR
 
 
 class TgUploadStatus(Status):
-    def __init__(self, obj, size, listener):
+    def __init__(self, obj, size, gid, listener):
         self.obj = obj
         self.__size = size
         self.uid = listener.uid
         self.message = listener.message
+        self.__gid = gid
 
     def path(self):
         return f"{DOWNLOAD_DIR}{self.uid}"
@@ -60,3 +61,6 @@ class TgUploadStatus(Status):
 
     def download(self):
         return self.obj
+
+    def gid(self) -> str:
+        return self.__gid 

@@ -9,11 +9,12 @@ from .status import Status
 
 
 class UploadStatus(Status):
-    def __init__(self, obj, size, listener):
+    def __init__(self, obj, size, gid, listener):
         self.obj = obj
         self.__size = size
         self.uid = listener.uid
         self.message = listener.message
+        self.__gid = gid
 
     def path(self):
         return f"{DOWNLOAD_DIR}{self.uid}"
@@ -57,3 +58,9 @@ class UploadStatus(Status):
             return f"{get_readable_time(seconds)}"
         except ZeroDivisionError:
             return "-"
+
+    def gid(self) -> str:
+        return self.__gid
+        
+    def download(self):
+        return self.obj

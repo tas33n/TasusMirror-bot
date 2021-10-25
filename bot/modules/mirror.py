@@ -102,6 +102,7 @@ class MirrorListener(listeners.MirrorListeners):
             LOGGER.info(f"Download completed: {download_dict[self.uid].name()}")
             download = download_dict[self.uid]
             name = download.name()
+            gid = download.gid()
             size = download.size_raw()
             if name is None:  # when pyrogram's media.file_name is of NoneType
                 name = os.listdir(f"{DOWNLOAD_DIR}{self.uid}")[0]
@@ -167,7 +168,7 @@ class MirrorListener(listeners.MirrorListeners):
                         os.remove(f_path)
             LOGGER.info(f"Leech Name: {up_name}")
             tg = pyrogramEngine.TgUploader(up_name, self)
-            tg_upload_status = TgUploadStatus(tg, size, self)
+            tg_upload_status = TgUploadStatus(tg, size, gid, self)
             with download_dict_lock:
                 download_dict[self.uid] = tg_upload_status
             update_all_messages()
@@ -175,7 +176,7 @@ class MirrorListener(listeners.MirrorListeners):
         else:
             LOGGER.info(f"Upload Name: {up_name}")
             drive = gdriveTools.GoogleDriveHelper(up_name, self)
-            upload_status = UploadStatus(drive, size, self)
+            upload_status = UploadStatus(drive, size, gid, self)
             with download_dict_lock:
                 download_dict[self.uid] = upload_status
             update_all_messages()
@@ -316,7 +317,13 @@ class MirrorListener(listeners.MirrorListeners):
                 pass
             del download_dict[self.message.message_id]
             count = len(download_dict)
-        sendMessage(e_str, self.bot, self.update)
+        if self.message.from_user.username:
+            uname = f"@{self.message.from_user.username}"
+        else:
+            uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
+        if uname is not None:
+            men = f'{uname} '
+        sendMessage(men + e_str, self.bot, self.update)
         if count == 0:
             self.clean()
         else:
