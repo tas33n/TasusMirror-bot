@@ -10,21 +10,25 @@
   not, You are only allowed to report that issue in bot support group if that
   issue is also present in official repo.
 
-## Features Coming soon....
-
-- ~Custom Filename~ Added
-
 ```
 Only for url, telegram files and ytdl.  Not for mega links and
 magnet/torrents
 ```
 
-- Rename Drive files
+- View Index Links To Steam Videos Or Music Online (Works With Bhadoo)
+- Leech Files To Telegram Supported. 
+- Clone Status.
+- Multi Drive Search. 
+- Rename Drive files.
+- SpeedTest.
+- Count Drive Files.
 
-Let's have some chit chat here -
-[@Magneto_chit_chat](https://t.me/magneto_chit_chat) Note :- it is not a Bot
-Support group. It's only for discussing rubbish things bcoz i want your help to
-learn coding .
+
+
+## Multi Drive Search :- 
+1- Turn On RECUSRIVE_SEARCH In Config.
+2- Fill drive_folder File Using Driveid.py Script. (python driveid.py)
+Note - Only TeamDriveID is Supported Right Now not Folder ID.
 
 ## Credits :-
 
@@ -34,7 +38,11 @@ learn coding .
   bot from scratch.
 - Then a huge thanks to [Sreeraj V R](https://github.com/SVR666) You can
   checkout his [repo here](https://github.com/SVR666/LoaderX-Bot)
-- Features added from [Sreeraj V R's](https://github.com/SVR666) repo -
+- Features added from [Sreeraj V R's](https://github.com/SVR666) repo 
+    And Anas[repo here](https://github.com/breakdowns/slam-mirrorbot) Repo (Archived)
+- Thanks To Ken For Base Repo 
+    checkout his [repo here](https://github.com/KenHV/Mirror-Bot)
+      
 
 ````
 1. Added Inline Buttons
@@ -44,7 +52,6 @@ learn coding .
 
 - Special thanks to [archie](https://github.com/archie9211) for very much useful
   feature **Unzipmirror**
-- Features added from [archie's](https://github.com/archie9211) repo
 
 ````
 1. unzipmirror
@@ -92,22 +99,6 @@ in JS.
 ## Bot commands to be set in botfather
 
 ```
-mirror - Start Mirroring
-zipmirror - Upload zip (zipped) file
-unzipmirror - Extract files
-clone - copy folder to drive
-watch - mirror YT-DL support link
-zipwatch - mirror youtube playlist link as zip
-cancel - Cancel a task
-cancelall - Cancel all tasks
-del - Delete file from Drive
-list - [query] searches files in G-Drive
-status - Get Mirror Status message
-stats - Bot Usage Stats
-help - Get Detailed Help
-log - Bot Log [owner only]
-```
-
 # How to deploy?
 
 Deploying is pretty much straight forward and is divided into several steps as

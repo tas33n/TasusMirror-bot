@@ -179,7 +179,7 @@ class GoogleDriveHelper:
         media_body = MediaFileUpload(path, mimetype=mime_type, resumable=False)
         file_metadata = {
             "name": file_name,
-            "description": "mirror",
+            "description": "Uploaded Using Harsh MirrorBot",
             "mimeType": mime_type,
         }
         if parent_id is not None:
@@ -229,7 +229,7 @@ class GoogleDriveHelper:
         # File body description
         file_metadata = {
             "name": file_name,
-            "description": "mirror",
+            "description": "Uploaded Using Harsh MirrorBot",
             "mimeType": mime_type,
         }
         try:
@@ -539,7 +539,7 @@ class GoogleDriveHelper:
                     else:
                         buttons.buildbutton("Index Link", url)
                         if VIEW_LINK:
-                            buttons.buildbutton("🌐 View Link", urls)
+                            buttons.buildbutton("View Link", urls)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
@@ -1082,3 +1082,48 @@ class GoogleDriveHelper:
                                                    orderBy='folder, modifiedTime desc').execute()["files"]
         return response
         
+    
+    def count(self, link):
+        try:
+            file_id = self.getIdFromUrl(link)
+        except (KeyError,IndexError):
+            msg = "Google Drive ID could not be found in the provided link"
+            return msg
+        msg = ""
+        LOGGER.info(f"File ID: {file_id}")
+        try:
+            drive_file = self.__service.files().get(fileId=file_id, fields="id, name, mimeType, size",
+                                                   supportsTeamDrives=True).execute()
+            name = drive_file['name']
+            LOGGER.info(f"Counting: {name}")
+            if drive_file['mimeType'] == self.__G_DRIVE_DIR_MIME_TYPE:
+                self.gDrive_directory(**drive_file)
+                msg += f'<b>Filename: </b><code>{name}</code>'
+                msg += f'\n<b>Size: </b><code>{get_readable_file_size(self.total_bytes)}</code>'
+                msg += f'\n<b>Type: </b><code>Folder</code>'
+                msg += f'\n<b>SubFolders: </b><code>{self.total_folders}</code>'
+                msg += f'\n<b>Files: </b><code>{self.total_files}</code>'
+            else:
+                msg += f'<b>Filename: </b><code>{name}</code>'
+                try:
+                    typee = drive_file['mimeType']
+                except:
+                    typee = 'File'    
+                try:
+                    self.total_files += 1
+                    self.gDrive_file(**drive_file)
+                    msg += f'\n<b>Size: </b><code>{get_readable_file_size(self.total_bytes)}</code>'
+                    msg += f'\n<b>Type: </b><code>{typee}</code>'
+                    msg += f'\n<b>Files: </b><code>{self.total_files}</code>'
+                except TypeError:
+                    pass
+        except Exception as err:
+            err = str(err).replace('>', '').replace('<', '')
+            LOGGER.error(err)
+            if "File not found" in str(err):
+                msg = "File not found."
+            else:
+                msg = f"Error.\n{err}"
+            return msg
+        return msg
+    

@@ -277,11 +277,11 @@ class MirrorListener(listeners.MirrorListeners):
                     siurls = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_urls}&format=text').text
                     buttons.buildbutton("Index Link", siurl)
                     if VIEW_LINK:
-                        buttons.buildbutton("🌐 View Link", siurls)
+                        buttons.buildbutton("View Link", siurls)
                 else:
                     buttons.buildbutton("Index Link", share_url)
                     if VIEW_LINK:
-                        buttons.buildbutton("🌐 View Link", share_urls)
+                        buttons.buildbutton("View Link", share_urls)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
@@ -403,7 +403,13 @@ def _mirror(bot, update,isTar=False, isZip=False, extract=False, isLeech=False):
     try:
         link = direct_link_generator(link)
     except DirectDownloadLinkException as e:
-        LOGGER.info(f"{link}: {e}")
+        LOGGER.info(e)
+        if "ERROR:" in str(e):
+                sendMessage(f"{e}", bot, update)
+                return
+        if "Youtube" in str(e):
+                sendMessage(f"{e}", bot, update)
+                return    
     listener = MirrorListener(bot, update, pswd, isTar, isZip, tag, extract, isLeech)
     if bot_utils.is_gdrive_link(link):
         if not isZip and not isTar and not extract and not isLeech:
