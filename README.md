@@ -14,7 +14,26 @@
 Only for url, telegram files and ytdl.  Not for mega links and
 magnet/torrents
 ```
+# Features supported:
 
+- Mirroring direct download links to google drive
+- Mirroring Mega.nz links to google drive (In development stage)
+- Mirror Telegram files to google drive
+- Mirror all youtube-dl supported links
+- Custom filename support in direct link, telegram files, YT-DL links
+- Extract these filetypes and uploads to google drive
+  > ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2, APM, ARJ, CHM, CPIO, CramFS,
+  > DEB, DMG, FAT, HFS, LZH, LZMA, LZMA2, MBR, MSI, MSLZ, NSIS, NTFS, RPM,
+  > SquashFS, UDF, VHD, XAR, Z.
+- Copy files from someone's drive to your drive (using Autorclone)
+- Service account support in cloning and uploading
+- Download progress
+- Upload progress
+- Download/upload speeds and ETAs
+- Docker support
+- Uploading To Team Drives.
+- Index Link support
+- Shortener support
 - View Index Links To Steam Videos Or Music Online (Works With Bhadoo)
 - Leech Files To Telegram Supported. 
 - Clone Status.
@@ -22,13 +41,17 @@ magnet/torrents
 - Rename Drive files.
 - SpeedTest.
 - Count Drive Files.
+- Extract password protected files (It's not hack, you have to enter password
+  for extracting. LOL)
 
-
+- For extracting password protected files, using custom filename and download
+  from password protected index links see these examples :-
+  > https://telegra.ph/Magneto-Python-Aria---Custom-Filename-Examples-01-20
 
 ## Multi Drive Search :- 
-1- Turn On RECUSRIVE_SEARCH In Config.
-2- Fill drive_folder File Using Driveid.py Script. (python driveid.py)
-Note - Only TeamDriveID is Supported Right Now not Folder ID.
+- 1- Turn On RECUSRIVE_SEARCH In Config.
+- 2- Fill drive_folder File Using Driveid.py Script. (python driveid.py)
+- Note - Only TeamDriveID is Supported Right Now not Folder ID.
 
 ## Credits :-
 
@@ -39,7 +62,7 @@ Note - Only TeamDriveID is Supported Right Now not Folder ID.
 - Then a huge thanks to [Sreeraj V R](https://github.com/SVR666) You can
   checkout his [repo here](https://github.com/SVR666/LoaderX-Bot)
 - Features added from [Sreeraj V R's](https://github.com/SVR666) repo 
-    And Anas[repo here](https://github.com/breakdowns/slam-mirrorbot) Repo (Archived)
+    And Anas [repo here](https://github.com/breakdowns/slam-mirrorbot) Repo (Archived)
 - Thanks To Ken For Base Repo 
     checkout his [repo here](https://github.com/KenHV/Mirror-Bot)
       
@@ -96,7 +119,8 @@ in JS.
   from password protected index links see these examples :-
   > https://telegra.ph/Magneto-Python-Aria---Custom-Filename-Examples-01-20
 
-## Bot commands to be set in botfather
+# Contact Me 
+- [Telegram](https://T.me/PeruNoob)
 
 ```
 # How to deploy?
@@ -186,6 +210,8 @@ Fill up rest of the fields. Meaning of each fields are discussed below:
   - shrinkme.io
   - urlshortx.com
   - shortzon.com
+
+
 
 Note :- Above are the supported url shorteners. Except these only some url
 shorteners are supported. If you want to use any other url shortener then first
