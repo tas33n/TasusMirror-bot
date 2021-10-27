@@ -10,10 +10,6 @@
   not, You are only allowed to report that issue in bot support group if that
   issue is also present in official repo.
 
-```
-Only for url, telegram files and ytdl.  Not for mega links and
-magnet/torrents
-```
 # Features supported:
 
 - Mirroring direct download links to google drive
@@ -48,10 +44,13 @@ magnet/torrents
   from password protected index links see these examples :-
   > https://telegra.ph/Magneto-Python-Aria---Custom-Filename-Examples-01-20
 
-## Multi Drive Search :- 
-- 1- Turn On RECUSRIVE_SEARCH In Config.
-- 2- Fill drive_folder File Using Driveid.py Script. (python driveid.py)
-- Note - Only TeamDriveID is Supported Right Now not Folder ID.
+# Multi Search IDs
+To use list from multi TD/folder. Run driveid.py in your terminal and follow it. It will generate **drive_folder** file or u can simply create `drive_folder` file in working directory and fill it, check below format:
+```
+MyTdName folderID/tdID IndexLink(if available)
+MyTdName2 folderID/tdID IndexLink(if available)
+```
+Turn On RECURSIVE_SEARCH In Config -RECURSIVE_SEARCH = "True"
 
 ## Credits :-
 
@@ -92,32 +91,9 @@ our beloved Google Drive.
 This project is heavily inspired from @out386 's telegram bot which is written
 in JS.
 
-# Features supported:
-
-- Mirroring direct download links to google drive
-- Mirroring Mega.nz links to google drive (In development stage)
-- Mirror Telegram files to google drive
-- Mirror all youtube-dl supported links
-- Custom filename support in direct link, telegram files, YT-DL links
-- Extract these filetypes and uploads to google drive
-  > ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2, APM, ARJ, CHM, CPIO, CramFS,
-  > DEB, DMG, FAT, HFS, LZH, LZMA, LZMA2, MBR, MSI, MSLZ, NSIS, NTFS, RPM,
-  > SquashFS, UDF, VHD, XAR, Z.
-- Copy files from someone's drive to your drive (using Autorclone)
-- Service account support in cloning and uploading
-- Download progress
-- Upload progress
-- Download/upload speeds and ETAs
-- Docker support
-- Uploading To Team Drives.
-- Index Link support
-- Shortener support
-- Extract password protected files (It's not hack, you have to enter password
-  for extracting. LOL)
-
-- For extracting password protected files, using custom filename and download
-  from password protected index links see these examples :-
-  > https://telegra.ph/Magneto-Python-Aria---Custom-Filename-Examples-01-20
+## Deploying on Heroku
+- Guide For Deploying on Heroku 
+<p><a href="https://telegra.ph/Hosting-Mirror-Bot-Guide-10-26"> <img src="https://img.shields.io/badge/Deploy%20Guide-blueviolet?style=for-the-badge&logo=heroku" width="170""/></a></p>
 
 # Contact Me 
 - [Telegram](https://T.me/PeruNoob)

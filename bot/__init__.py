@@ -33,18 +33,19 @@ logging.basicConfig(
 )
 #Config And Heroku Support
 CONFIG_FILE_URL = os.environ.get('CONFIG_FILE_URL')
-if len(CONFIG_FILE_URL) == 0:
-        CONFIG_FILE_URL = None
-if CONFIG_FILE_URL is not None:
-    logging.error("Downloading config.env From Provided URL")
-    os.remove("config.env")
-    res = requests.get(CONFIG_FILE_URL)
-    if res.status_code == 200:
-        with open('config.env', 'wb+') as f:
-            f.write(res.content)
-            f.close()
-    else:
-        logging.error(f"Failed to download config.env {res.status_code}")
+if CONFIG_FILE_URL:
+    if len(CONFIG_FILE_URL) == 0:
+            CONFIG_FILE_URL = None
+    if CONFIG_FILE_URL is not None:
+        logging.error("Downloading config.env From Provided URL")
+        os.remove("config.env")
+        res = requests.get(CONFIG_FILE_URL)
+        if res.status_code == 200:
+            with open('config.env', 'wb+') as f:
+                f.write(res.content)
+                f.close()
+        else:
+            logging.error(f"Failed to download config.env {res.status_code}")
 load_dotenv("config.env")
 
 Interval = []
