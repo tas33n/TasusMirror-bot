@@ -211,7 +211,7 @@ class MirrorListener(listeners.MirrorListeners):
 
     def onUploadProgress(self):
         pass
-
+    
     def onUploadComplete(self, link: str, size, files, folders, typ):
         if self.isLeech:
             if self.message.from_user.username:
@@ -257,32 +257,34 @@ class MirrorListener(listeners.MirrorListeners):
                 surl = requests.get(
                     f"https://{SHORTENER}/api?api={SHORTENER_API}&url={link}&format=text"
                 ).text
-                buttons.buildbutton("Drive Link", surl)
+                buttons.buildbutton("☁️ Drive Link", surl)
             else:
-                buttons.buildbutton("Drive Link", link)
-            LOGGER.info(f"Done Uploading {download_dict[self.uid].name()}")
+                buttons.buildbutton("☁️ Drive Link", link)
+            LOGGER.info(f'Done Uploading {download_dict[self.uid].name()}')
             if INDEX_URL is not None:
-                url_path = requests.utils.quote(f"{download_dict[self.uid].name()}")
-                share_url = f"{INDEX_URL}/{url_path}"
-                share_urls = f'{INDEX_URL}/{url_path}?a=view'
-                if os.path.isdir(
-                    f"{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}"
-                ):
-                    share_url += "/"
-                if SHORTENER is not None and SHORTENER_API is not None:
-                    siurl = requests.get(
-                        f"https://{SHORTENER}/api?api={SHORTENER_API}&url={share_url}&format=text"
-                    ).text
-                    siurls = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_urls}&format=text').text
-                    buttons.buildbutton("Index Link", siurl)
-                    if VIEW_LINK:
-                        buttons.buildbutton("View Link", siurls)
+                url_path = requests.utils.quote(f'{download_dict[self.uid].name()}')
+                share_url = f'{INDEX_URL}/{url_path}'
+                if os.path.isdir(f'{DOWNLOAD_DIR}/{self.uid}/{download_dict[self.uid].name()}'):
+                    share_url += '/'
+                    if SHORTENER is not None and SHORTENER_API is not None:
+                        siurl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_url}&format=text').text
+                        buttons.buildbutton("⚡ Index Link", siurl)
+                    else:
+                        buttons.buildbutton("⚡ Index Link", share_url)
                 else:
-                    buttons.buildbutton("Index Link", share_url)
-                    if VIEW_LINK:
-                        buttons.buildbutton("View Link", share_urls)
+                    share_urls = f'{INDEX_URL}/{url_path}?a=view'
+                    if SHORTENER is not None and SHORTENER_API is not None:
+                        siurl = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_url}&format=text').text
+                        siurls = requests.get(f'https://{SHORTENER}/api?api={SHORTENER_API}&url={share_urls}&format=text').text
+                        buttons.buildbutton("⚡ Index Link", siurl)
+                        if VIEW_LINK:
+                            buttons.buildbutton("🌐 View Link", siurls)
+                    else:
+                        buttons.buildbutton("⚡ Index Link", share_url)
+                        if VIEW_LINK:
+                            buttons.buildbutton("🌐 View Link", share_urls)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
-                buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
+                buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")               
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
                 buttons.buildbutton(f"{BUTTON_FOUR_NAME}", f"{BUTTON_FOUR_URL}")
             if BUTTON_FIVE_NAME is not None and BUTTON_FIVE_URL is not None:

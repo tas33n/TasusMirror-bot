@@ -498,9 +498,9 @@ class GoogleDriveHelper:
                     surl = requests.get(
                         f"https://{SHORTENER}/api?api={SHORTENER_API}&url={durl}&format=text"
                     ).text
-                    buttons.buildbutton("Drive Link", surl)
+                    buttons.buildbutton("☁️ Drive Link", surl)
                 else:
-                    buttons.buildbutton("Drive Link", durl)
+                    buttons.buildbutton("☁️ Drive Link", durl)
                 if INDEX_URL is not None:
                     url_path = requests.utils.quote(f'{meta.get("name")}')
                     url = f"{INDEX_URL}/{url_path}/"
@@ -508,9 +508,9 @@ class GoogleDriveHelper:
                         siurl = requests.get(
                             f"https://{SHORTENER}/api?api={SHORTENER_API}&url={url}&format=text"
                         ).text
-                        buttons.buildbutton("Index Link", siurl)
+                        buttons.buildbutton("⚡ Index Link", siurl)
                     else:
-                        buttons.buildbutton("Index Link", url)
+                        buttons.buildbutton("⚡ Index Link", url)
             else:
                 file = self.copyFile(meta.get("id"), parent_id)
                 msg += f'<b>Filename : </b><code>{file.get("name")}</code>'
@@ -520,9 +520,9 @@ class GoogleDriveHelper:
                     surl = requests.get(
                         f"https://{SHORTENER}/api?api={SHORTENER_API}&url={durl}&format=text"
                     ).text
-                    buttons.buildbutton("Drive Link", surl)
+                    buttons.buildbutton("☁️ Drive Link", surl)
                 else:
-                    buttons.buildbutton("Drive Link", durl)
+                    buttons.buildbutton("☁️ Drive Link", durl)
                 try:
                     msg += f'\n<b>Size : </b><code>{get_readable_file_size(int(meta.get("size")))}</code>'
                 except TypeError:
@@ -535,11 +535,11 @@ class GoogleDriveHelper:
                         siurl = requests.get(
                             f"https://{SHORTENER}/api?api={SHORTENER_API}&url={url}&format=text"
                         ).text
-                        buttons.buildbutton("Index Link", siurl)
+                        buttons.buildbutton("⚡ Index Link", siurl)
                     else:
-                        buttons.buildbutton("Index Link", url)
+                        buttons.buildbutton("⚡ Index Link", url)
                         if VIEW_LINK:
-                            buttons.buildbutton("View Link", urls)
+                            buttons.buildbutton("🌐 View Link", urls)
             if BUTTON_THREE_NAME is not None and BUTTON_THREE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_THREE_NAME}", f"{BUTTON_THREE_URL}")
             if BUTTON_FOUR_NAME is not None and BUTTON_FOUR_URL is not None:
