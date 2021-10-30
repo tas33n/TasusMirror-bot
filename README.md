@@ -16,6 +16,8 @@
 - Mirroring Mega.nz links to google drive (In development stage)
 - Mirror Telegram files to google drive
 - Mirror all youtube-dl supported links
+- Mirror Torrent Files and magnet links
+- Mirror By Reply
 - Custom filename support in direct link, telegram files, YT-DL links
 - Extract these filetypes and uploads to google drive
   > ZIP, RAR, TAR, 7z, ISO, WIM, CAB, GZIP, BZIP2, APM, ARJ, CHM, CPIO, CramFS,

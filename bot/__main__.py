@@ -196,7 +196,7 @@ def main():
     restart_handler = CommandHandler(
         BotCommands.RestartCommand,
         restart,
-        filters=CustomFilters.owner_filter,
+        filters=CustomFilters.owner_filter | CustomFilters.sudo_user,
         run_async=True,
     )
     help_handler = CommandHandler(
@@ -212,7 +212,7 @@ def main():
         run_async=True,
     )
     log_handler = CommandHandler(
-        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter, run_async=True
+        BotCommands.LogCommand, log, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True
     )
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(ping_handler)

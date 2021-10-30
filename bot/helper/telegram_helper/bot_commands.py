@@ -11,6 +11,9 @@ class _BotCommands:
         self.StatusCommand = "status"
         self.AuthorizeCommand = "authorize"
         self.UnAuthorizeCommand = "unauthorize"
+        self.AuthorizedUsersCommand = 'users'
+        self.AddSudoCommand = 'addsudo'
+        self.RmSudoCommand = 'rmsudo'
         self.PingCommand = "ping"
         self.RestartCommand = "restart"
         self.StatsCommand = "stats"

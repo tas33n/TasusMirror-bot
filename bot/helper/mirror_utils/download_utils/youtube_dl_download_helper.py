@@ -3,7 +3,7 @@ import re
 import threading
 import time
 
-from youtube_dl import DownloadError, YoutubeDL
+from yt_dlp import DownloadError, YoutubeDL
 
 from bot import download_dict, download_dict_lock
 
