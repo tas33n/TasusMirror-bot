@@ -5,6 +5,7 @@ import time
 from sys import executable
 
 import psutil
+from pyrogram import idle
 from telegram import InlineKeyboardMarkup
 from telegram.ext import CommandHandler
 from bot import IGNORE_PENDING_REQUESTS, app, bot, botStartTime, dispatcher, updater
@@ -227,3 +228,4 @@ def main():
 
 app.start()
 main()
+idle()
