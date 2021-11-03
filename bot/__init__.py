@@ -38,7 +38,9 @@ if CONFIG_FILE_URL:
             CONFIG_FILE_URL = None
     if CONFIG_FILE_URL is not None:
         logging.error("Downloading config.env From Provided URL")
-        os.remove("config.env")
+        if os.path.isfile("config.env"):
+            logging.error("Updating config.env")
+            os.remove("config.env")
         res = requests.get(CONFIG_FILE_URL)
         if res.status_code == 200:
             with open('config.env', 'wb+') as f:
