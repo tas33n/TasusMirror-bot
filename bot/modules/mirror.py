@@ -9,7 +9,7 @@ import urllib
 import time
 import shutil
 import requests
-from telegram import InlineKeyboardMarkup
+from telegram import InlineKeyboardMarkup, ParseMode
 from telegram.ext import CommandHandler
 
 from bot import (
@@ -33,6 +33,7 @@ from bot import (
     download_dict_lock,
     TG_SPLIT_SIZE,
     VIEW_LINK,
+    LOGS_CHATS,
 
 )
 from bot.helper.ext_utils import bot_utils, fs_utils
@@ -60,13 +61,7 @@ from bot.helper.mirror_utils.upload_utils import gdriveTools, pyrogramEngine
 from bot.helper.telegram_helper import button_build
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.filters import CustomFilters
-from bot.helper.telegram_helper.message_utils import (
-    delete_all_messages,
-    sendMarkup,
-    sendMessage,
-    sendStatusMessage,
-    update_all_messages,
-)
+from bot.helper.telegram_helper.message_utils import *
 
 ariaDlManager = AriaDownloadHelper()
 ariaDlManager.start_listener()
@@ -295,6 +290,14 @@ class MirrorListener(listeners.MirrorListeners):
                 uname = f'<a href="tg://user?id={self.message.from_user.id}">{self.message.from_user.first_name}</a>'
             if uname is not None:
                 msg += f"\n\ncc : {uname}"
+                if LOGS_CHATS:
+                    try:
+                        for i in LOGS_CHATS:
+                            msg1 = f'<b>File Uploaded: </b> <code>{download_dict[self.uid].name()}</code>\n'
+                            msg1 += f'<b>By: </b>{uname}\n'
+                            bot.sendMessage(chat_id=i, text=msg1, reply_markup=InlineKeyboardMarkup(buttons.build_menu(2)), parse_mode=ParseMode.HTML)
+                    except Exception as e:
+                        LOGGER.warning(e)                                           
             try:
                 fs_utils.clean_download(download_dict[self.uid].path())
             except FileNotFoundError:

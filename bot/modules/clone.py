@@ -5,7 +5,7 @@ from bot.helper.telegram_helper.message_utils import *
 from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.mirror_utils.status_utils.clone_status import CloneStatus
-from bot import dispatcher, LOGGER, STOP_DUPLICATE_CLONE, download_dict, download_dict_lock, Interval, DOWNLOAD_STATUS_UPDATE_INTERVAL, CLONE_LIMIT
+from bot import dispatcher, LOGGER, STOP_DUPLICATE_CLONE, download_dict, download_dict_lock, Interval, DOWNLOAD_STATUS_UPDATE_INTERVAL, CLONE_LIMIT, LOGS_CHATS
 from bot.helper.ext_utils.bot_utils import setInterval, check_limit
 import random
 import string
@@ -69,7 +69,15 @@ def cloneNode(update, context):
         if button in ["cancelled", ""]:
             sendMessage(men + result, context.bot, update)
         else:
-            sendMarkup(result + cc, context.bot, update, button)       
+            sendMarkup(result + cc, context.bot, update, button)
+            if LOGS_CHATS:
+                try:
+                    for i in LOGS_CHATS:
+                        msg1 = f'<b>File Cloned: </b> <code>{name}</code>\n'
+                        msg1 += f'<b>By: </b>{uname}\n'
+                        bot.sendMessage(chat_id=i, text=msg1, reply_markup=button, parse_mode=ParseMode.HTML)
+                except Exception as e:
+                    LOGGER.warning(e)                                                     
     else:
         sendMessage('Provide G-Drive Shareable Link to Clone.', context.bot, update)
 

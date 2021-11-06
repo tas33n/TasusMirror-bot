@@ -122,6 +122,7 @@ AS_MEDIA_USERS = set()
 # Stores list of users and chats the bot is authorized to use in
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
+LOGS_CHATS = set()
 if os.path.exists('sudo_users.txt'):
     with open('sudo_users.txt', 'r+') as f:
         lines = f.readlines()
@@ -146,6 +147,21 @@ try:
     for chats in achats:
         AUTHORIZED_CHATS.add(int(chats))
 except:
+    pass
+
+if os.path.exists("logs_chat.txt"):
+    with open("logs_chat.txt", "r+") as f:
+        lines = f.readlines()
+        for line in lines:
+            #    LOGGER.info(line.split())
+            LOGS_CHATS.add(int(line.split()[0]))
+try:
+    achats = getConfig("LOGS_CHATS")
+    achats = achats.split(" ")
+    for chats in achats:
+        LOGS_CHATS.add(int(chats))
+except:
+    logging.warning('Logs Chat Details not provided!')
     pass
 
 try:
