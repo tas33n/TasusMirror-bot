@@ -13,6 +13,9 @@ from dotenv import load_dotenv
 from pyrogram import Client
 from telegraph import Telegraph
 
+import psycopg2
+from psycopg2 import Error
+
 faulthandler.enable()
 import subprocess
 
@@ -51,6 +54,18 @@ if CONFIG_FILE_URL:
 load_dotenv("config.env")
 
 Interval = []
+def mktable():
+    try:
+        conn = psycopg2.connect(DB_URI)
+        cur = conn.cursor()
+        sql = "CREATE TABLE users (uid bigint, sudo boolean DEFAULT FALSE);"
+        cur.execute(sql)
+        conn.commit()
+        logging.info("Table Created!")
+    except Error as e:
+        logging.error(e)
+        exit(1)
+
 def getConfig(name: str):
     return os.environ[name]
 
