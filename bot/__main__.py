@@ -120,7 +120,7 @@ def bot_help(update, context):
 
 /{BotCommands.WatchCommand} [youtube-dl supported link]: Mirror through youtube-dl. Click /{BotCommands.WatchCommand} for more help
 /{BotCommands.LeechWatchCommand} Mirror Youtube-dl support link(Leech)"),
-/{BotCommands.LeechTarWatchCommand} Mirror Youtube playlist link as .zip(Leech)"),
+/{BotCommands.LeechTarWatchCommand} Mirror Youtube playlist link as .tar(Leech)"),
 /{BotCommands.LeechZipWatchCommand} Mirror Youtube playlist link as .zip(Leech)"),
 /{BotCommands.ZipWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and zip before uploading
 /{BotCommands.TarWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
@@ -170,6 +170,11 @@ botcmds = [
     (f"{BotCommands.PingCommand}", "Ping the bot"),
     (f"{BotCommands.RestartCommand}", "Restart the bot [owner only]"),
     (f"{BotCommands.LogCommand}", "Get the bot log [owner only]"),
+    (f"{BotCommands.AuthorizedUsersCommand}", "Get Authorized Users List[owner only]"),
+    (f"{BotCommands.AuthorizeCommand}", "Authorize User To Use Bot [owner only]"),
+    (f"{BotCommands.UnAuthorizeCommand}", "UnAuthorize User From Bot [owner only]"),
+    (f"{BotCommands.AddSudoCommand}", "Add Sudo User [owner only]"),
+    (f"{BotCommands.RmSudoCommand}", "Remove sudo User [owner only]"),
 ]
 
 
