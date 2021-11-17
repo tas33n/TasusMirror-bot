@@ -7,11 +7,14 @@ then
 fi
 echo "Are You Logged In On Heroku CLi? Type Y OR N."
 read login
-if  ! ( [ "$login" == "Y" ] || [ "$login" == "y" ] )
+if ! ( [ "$login" == "Y" ] || [ "$login" == "y" ] )
 then 
     echo "Login First"
     exit
 fi
+echo "Passing Fake Git UserName"
+git config --global user.name Your Name
+git config --global user.email you@example.com
 echo "1. Type 1 If You Want To Host A New Bot."
 echo "2. Type 2 If You Want To Update Old Bot."
 read update 
@@ -30,11 +33,14 @@ then
     echo "Config Not Found" 
     exit
 fi
-echo "Passing Fake Git UserName"
-git config --global user.name Your Name
-git config --global user.email you@example.com
-echo "Making a New App"
-echo "Using a Random Name= $appname"
+echo -e "Making a New App\n"
+echo -e "Want To Enter Your Own App Name? (Random Name:-$appname Will Be Selected By Default.)\n"
+echo -e "Enter An Unique App Name Starting With Lowercase Letter.\n"
+echo -e "Dont Enter Anything For Random App Name.(Just Press Enter And Leave It Blank.)\n"
+read name
+name="${name:=$appname}"
+appname=$name
+echo "Using $appname As Name."
 heroku create $appname
 heroku git:remote -a $appname
 heroku stack:set container -a $appname
