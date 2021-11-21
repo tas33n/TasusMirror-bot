@@ -457,13 +457,14 @@ class GoogleDriveHelper:
                     q=q,
                     spaces="drive",
                     pageSize=200,
-                    fields="nextPageToken, files(id, name, mimeType,size)",
+                    fields='nextPageToken, files(id, name, mimeType,size)',
+                    corpora='allDrives',
+                    orderBy='folder, name',
                     pageToken=page_token,
                 )
                 .execute()
             )
-            for file in response.get("files", []):
-                files.append(file)
+            files.extend(response.get('files', []))
             page_token = response.get("nextPageToken", None)
             if page_token is None:
                 break
@@ -690,11 +691,10 @@ class GoogleDriveHelper:
                 html_content=content,
             )
         return
-
     def escapes(self, str):
-        chars = ["\\", "'", '"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t"]
+        chars = ['\\', "'", '"', r'\a', r'\b', r'\f', r'\n', r'\r', r'\s', r'\t']
         for char in chars:
-            str = str.replace(char, "\\" + char)
+            str = str.replace(char, ' ')
         return str
 
     def gDrive_file(self, **kwargs):
@@ -872,20 +872,11 @@ class GoogleDriveHelper:
 
     def uni_drive_list(self, fileName):
         search_type = None
-        if re.search("^-d ", fileName, re.IGNORECASE):
-            search_type = '-d'
-            fileName = fileName[ 2 : len(fileName)]
-        elif re.search("^-f ", fileName, re.IGNORECASE):
-            search_type = '-f'
-            fileName = fileName[ 2 : len(fileName)]
-        if len(fileName) > 2:
-            remove_list = ['A', 'a', 'X', 'x']
-            if fileName[1] == ' ' and fileName[0] in remove_list:
-                fileName = fileName[ 2 : len(fileName) ]
+        fileName = self.escapes(str(fileName))
         msg = ''
         INDEX = -1
         content_count = 0
-        reached_max_limit = False
+        all_contents_count = 0
         add_title_msg = True
         for parent_id in DRIVE_ID :
             add_drive_title = True
@@ -919,13 +910,11 @@ class GoogleDriveHelper:
                             msg += f' <b>| <a href="{urls}">View Link</a></b>'    
                     msg += '<br><br>'
                     content_count += 1
-                    if (content_count >= TELEGRAPHLIMIT):
-                        reached_max_limit = True
-                        LOGGER.info(f"my a: {content_count}")
-                        #self.telegraph_content.append(msg)
-                        #msg = ""
-                        #content_count = 0
-                        break
+                    all_contents_count += 1
+                    if content_count == TELEGRAPHLIMIT :
+                        self.telegraph_content.append(msg)
+                        msg = ""
+                        content_count = 0
         if msg != '':
             self.telegraph_content.append(msg)
         if len(self.telegraph_content) == 0:
@@ -940,9 +929,7 @@ class GoogleDriveHelper:
         self.num_of_path = len(self.path)
         if self.num_of_path > 1:
             self.edit_telegraph()
-        msg = f"Found {content_count}" + ("+" if content_count >= 80 else "") + " results"
-        if reached_max_limit:
-            msg += ". (Only showing top 80 results. Omitting remaining results)"
+        msg = f"Found {all_contents_count} results for {fileName}"
         buttons = button_build.ButtonMaker()
         buttons.buildbutton("Click Here for results", f"https://telegra.ph/{self.path[0]}")
         return msg, InlineKeyboardMarkup(buttons.build_menu(1))
