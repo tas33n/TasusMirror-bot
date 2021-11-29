@@ -422,11 +422,12 @@ def _mirror(bot, update,isTar=False, isZip=False, extract=False, isLeech=False):
                     link = f"{file_name}"
                 else:
                     sendMessage("ERROR: link got HTTP response:" + resp.status_code, bot, update)
-                    return        
+                    return
     elif not bot_utils.is_url(link) and not bot_utils.is_magnet(link):
         sendMessage("No download source provided", bot, update)
         return
     try:
+        gdtot_link = bot_utils.is_gdtot_link(link)
         link = direct_link_generator(link)
     except DirectDownloadLinkException as e:
         LOGGER.info(e)
@@ -461,6 +462,8 @@ def _mirror(bot, update,isTar=False, isZip=False, extract=False, isLeech=False):
             )
         sendStatusMessage(update, bot)
         drive.download(link)
+        if gdtot_link:
+            drive.deletefile(link)
 
     elif bot_utils.is_mega_link(link) and MEGA_KEY is not None and not BLOCK_MEGA_LINKS:
         mega_dl = MegaDownloader(listener)

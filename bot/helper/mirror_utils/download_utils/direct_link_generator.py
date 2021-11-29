@@ -8,7 +8,7 @@ from https://github.com/AvinashReddy3108/PaperplaneExtended . I hereby take no c
 than the modifications. See https://github.com/AvinashReddy3108/PaperplaneExtended/commits/master/userbot/modules/direct_links.py
 for original authorship. """
 
-from bot import LOGGER
+from bot import LOGGER, PHPSESSID, CRYPT
 import json
 import math
 import re
@@ -23,9 +23,12 @@ from bs4 import BeautifulSoup
 from js2py import EvalJs
 from lk21.extractors.bypasser import Bypass
 from base64 import standard_b64encode
+from bot.helper.telegram_helper.message_utils import *
 from bot.helper.telegram_helper.bot_commands import BotCommands
+from bot.helper.ext_utils.bot_utils import is_gdtot_link
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException
 
+cookies = {"PHPSESSID": PHPSESSID, "crypt": CRYPT}
 
 def direct_link_generator(link: str):
     """ direct links generator """
@@ -89,6 +92,8 @@ def direct_link_generator(link: str):
         return fichier(link)
     elif 'solidfiles.com' in link:
         return solidfiles(link)
+    elif is_gdtot_link(link):
+        return gdtot(link)
     else:
         raise DirectDownloadLinkException(f'No Direct link function found for {link}')
 
@@ -374,3 +379,34 @@ def useragent():
         'lxml').findAll('td', {'class': 'useragent'})
     user_agent = choice(useragents)
     return user_agent.text
+
+def gdtot(url: str) -> str:
+    """ Gdtot google drive link generator
+    By https://github.com/oxosec """
+
+    if CRYPT is None:
+        raise DirectDownloadLinkException("ERROR: PHPSESSID and CRYPT variables not provided")
+    headers = {'upgrade-insecure-requests': '1',
+               'save-data': 'on',
+               'user-agent': 'Mozilla/5.0 (Linux; Android 10; Redmi 8A Dual) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.101 Mobile Safari/537.36',
+               'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+               'sec-fetch-site': 'same-origin',
+               'sec-fetch-mode': 'navigate',
+               'sec-fetch-dest': 'document',
+               'referer': '',
+               'prefetchAd_3621940': 'true',
+               'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7'}
+
+    r1 = requests.get(url, headers=headers, cookies=cookies).content
+    s1 = BeautifulSoup(r1, 'html.parser').find('button', id="down").get('onclick').split("'")[1]
+    headers['referer'] = url
+    s2 = BeautifulSoup(requests.get(s1, headers=headers, cookies=cookies).content, 'html.parser').find('meta').get('content').split('=',1)[1]
+    headers['referer'] = s1
+    s3 = BeautifulSoup(requests.get(s2, headers=headers, cookies=cookies).content, 'html.parser').find('div', align="center")
+    if s3 is None:
+        s3 = BeautifulSoup(requests.get(s2, headers=headers, cookies=cookies).content, 'html.parser')
+        status = s3.find('h4').text
+        raise DirectDownloadLinkException(f"ERROR: {status}")
+    else:
+        gdlink = s3.find('a', class_="btn btn-outline-light btn-user font-weight-bold").get('href')
+        return gdlink

@@ -120,6 +120,37 @@ in JS.
 
 </details>
 
+-----
+
+## Gdtot Cookies
+To Clone or Leech gdtot link follow these steps:
+1. Login/Register to [gdtot](https://new.gdtot.top).
+2. Copy this script and paste it in browser address bar.
+   - **Note**: After pasting it check at the beginning of the script in broswer address bar if `javascript:` exists or not, if not so write it as shown below.
+   ```
+   javascript:(function () {
+     const input = document.createElement('input');
+     input.value = JSON.stringify({url : window.location.href, cookie : document.cookie});
+     document.body.appendChild(input);
+     input.focus();
+     input.select();
+     var result = document.execCommand('copy');
+     document.body.removeChild(input);
+     if(result)
+       alert('Cookie copied to clipboard');
+     else
+       prompt('Failed to copy cookie. Manually copy below cookie\n\n', input.value);
+   })();
+   ```
+   - After pressing enter your browser will prompt a alert.
+3. Now you'll get this type of data in your clipboard
+   ```
+   {"url":"https://new.gdtot.org/","cookie":"PHPSESSID=k2xxxxxxxxxxxxxxxxxxxxj63o; crypt=NGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWdSVT0%3D"}
+
+   ```
+4. From this you have to paste value of PHPSESSID and crypt in config.env file.
+
+-----
 
 # How to deploy?
 
