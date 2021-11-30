@@ -68,7 +68,7 @@ ariaDlManager.start_listener()
 
 
 class MirrorListener(listeners.MirrorListeners):
-    def __init__(self, bot, update, pswd, isTar=False, isZip=False, extract=False, isLeech=False):
+    def __init__(self, bot, update, isTar=False, isZip=False, extract=False, isLeech=False, pswd=None):
         super().__init__(bot, update)
         self.isZip = isZip
         self.isTar = isTar
@@ -389,7 +389,7 @@ def _mirror(bot, update,isTar=False, isZip=False, extract=False, isLeech=False):
             or len(link) == 0
         ) and file is not None:
             if file.mime_type != "application/x-bittorrent":
-                listener = MirrorListener(bot, update, pswd,isTar, isZip, extract, isLeech=isLeech)
+                listener = MirrorListener(bot, update, isTar, isZip, extract, isLeech=isLeech, pswd=pswd)
                 tg_downloader = TelegramDownloadHelper(listener)
                 tg_downloader.add_download(
                     reply_to, f"{DOWNLOAD_DIR}{listener.uid}/", name
@@ -437,7 +437,7 @@ def _mirror(bot, update,isTar=False, isZip=False, extract=False, isLeech=False):
         if "Youtube" in str(e):
                 sendMessage(f"{e}", bot, update)
                 return    
-    listener = MirrorListener(bot, update, pswd, isTar, isZip, extract, isLeech)
+    listener = MirrorListener(bot, update, isTar, isZip, extract, isLeech, pswd)
     if bot_utils.is_gdrive_link(link):
         if not isZip and not isTar and not extract and not isLeech:
             sendMessage(
