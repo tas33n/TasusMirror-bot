@@ -4,9 +4,10 @@ import logging
 import os
 import pickle
 import re
+import time
 import urllib.parse as urlparse
 from urllib.parse import parse_qs
-
+from random import randrange
 import requests
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
@@ -16,14 +17,7 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from telegram import InlineKeyboardMarkup
 from telegraph import Telegraph
-from tenacity import (
-    RetryError,
-    before_log,
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
+from tenacity import *
 from bot import DRIVE_NAME, DRIVE_ID, UNI_INDEX_URL
 
 from bot import (
@@ -50,7 +44,8 @@ from bot.helper.telegram_helper import button_build
 
 LOGGER = logging.getLogger(__name__)
 logging.getLogger("googleapiclient.discovery").setLevel(logging.ERROR)
-SERVICE_ACCOUNT_INDEX = 0
+if USE_SERVICE_ACCOUNTS:
+    SERVICE_ACCOUNT_INDEX = randrange(len(os.listdir("accounts")))
 TELEGRAPHLIMIT = 80
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
@@ -189,23 +184,18 @@ class GoogleDriveHelper:
             .create(supportsTeamDrives=True, body=file_metadata, media_body=media_body)
             .execute()
         )
-
     def switchServiceAccount(self):
         global SERVICE_ACCOUNT_INDEX
         service_account_count = len(os.listdir("accounts"))
         if SERVICE_ACCOUNT_INDEX == service_account_count - 1:
-            return False
+            SERVICE_ACCOUNT_INDEX = 0
+        self.sa_count += 1
         SERVICE_ACCOUNT_INDEX += 1
         LOGGER.info(f"Switching to {SERVICE_ACCOUNT_INDEX}.json service account")
         self.__service = self.authorize()
-        return True
-
-    @retry(
-        wait=wait_exponential(multiplier=2, min=3, max=6),
-        stop=stop_after_attempt(5),
-        retry=retry_if_exception_type(HttpError),
-        before=before_log(LOGGER, logging.DEBUG),
-    )
+    
+    @retry(wait=wait_exponential(multiplier=2, min=3, max=6), stop=stop_after_attempt(5),
+           retry=retry_if_exception_type(HttpError), before=before_log(LOGGER, logging.DEBUG))
     def __set_permission(self, drive_id):
         permissions = {
             "role": "reader",
@@ -474,6 +464,10 @@ class GoogleDriveHelper:
     def clone(self, link):
         self.is_cloning = True
         self.start_time = time.time()
+        self.total_files = 0
+        self.total_folders = 0
+        if USE_SERVICE_ACCOUNTS:
+            self.service_account_count = len(os.listdir("accounts"))
         try:
             file_id = self.getIdFromUrl(link)
         except (KeyError, IndexError):
@@ -830,18 +824,18 @@ class GoogleDriveHelper:
                  if err.resp.get('content-type', '').startswith('application/json'):
                      reason = json.loads(err.content).get('error').get('errors')[0].get('reason')
                      if reason == 'downloadQuotaExceeded' or reason == 'dailyLimitExceeded':
-                         if USE_SERVICE_ACCOUNTS:
-                             if self.sa_count == self.service_account_count:
-                                 self.is_cancelled = True
-                                 raise err
-                             else:
-                                 self.switchServiceAccount()
-                                 LOGGER.info(f"Got: {reason}, Trying Again...")
-                                 return self.download_file(file_id, path, filename, mime_type)
-                         else:
-                             self.is_cancelled = True
-                             LOGGER.info(f"Got: {reason}")
-                             raise err
+                        if USE_SERVICE_ACCOUNTS:
+                            if self.sa_count == self.service_account_count:
+                                self.is_cancelled = True
+                                raise err
+                            else:
+                                self.switchServiceAccount()
+                                LOGGER.info(f"Got: {reason}, Trying Again...")
+                                return self.download_file(file_id, path, filename, mime_type)
+                        else:
+                            self.is_cancelled = True
+                            LOGGER.info(f"Got: {reason}")
+                            raise err
                      else:
                          raise err
         self._file_downloaded_bytes = 0
@@ -1113,4 +1107,3 @@ class GoogleDriveHelper:
                 msg = f"Error.\n{err}"
             return msg
         return msg
-    
