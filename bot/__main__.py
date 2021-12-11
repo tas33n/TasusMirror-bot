@@ -125,19 +125,21 @@ def bot_help(update, context):
 /{BotCommands.ZipWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and zip before uploading
 /{BotCommands.TarWatchCommand} [youtube-dl supported link]: Mirror through youtube-dl and tar before uploading
 
-/{BotCommands.CancelMirror} : Reply to the message by which the download was initiated and that download will be cancelled
+/{BotCommands.CancelMirror} Reply to the message by which the download was initiated and that download will be cancelled
 
-/{BotCommands.StatusCommand}: Shows a status of all the downloads
+/{BotCommands.StatusCommand} Shows a status of all the downloads
 
-/{BotCommands.SpeedCommand}: Test Internet Speed Of the Bot
+/{BotCommands.SpeedCommand} Test Internet Speed Of the Bot
 
 /{BotCommands.ListCommand} [search term]: Searches the search term in the Google drive, if found replies with the link
 
-/{BotCommands.StatsCommand}: Show Stats of the machine the bot is hosted on
+/{BotCommands.StatsCommand} Show Stats of the machine the bot is hosted on
 
-/{BotCommands.AuthorizeCommand}: Authorize a chat or a user to use the bot (Can only be invoked by owner of the bot)
+/{BotCommands.AuthorizeCommand} Authorize a chat or a user to use the bot (Can only be invoked by owner of the bot)
 
-/{BotCommands.LogCommand}: Get a log file of the bot. Handy for getting crash reports
+/{BotCommands.LogCommand} Get a log file of the bot. Handy for getting crash reports
+/{BotCommands.LeechSetCommand} Leech settings
+/{BotCommands.SetThumbCommand} Reply photo to set it as Thumbnail
 
 """
     sendMessage(help_string, context.bot, update)
@@ -175,6 +177,8 @@ botcmds = [
     (f"{BotCommands.UnAuthorizeCommand}", "UnAuthorize User From Bot [owner only]"),
     (f"{BotCommands.AddSudoCommand}", "Add Sudo User [owner only]"),
     (f"{BotCommands.RmSudoCommand}", "Remove sudo User [owner only]"),
+    (f'{BotCommands.LeechSetCommand}','Leech settings'),
+    (f'{BotCommands.SetThumbCommand}','Set thumbnail'),
 ]
 
 
