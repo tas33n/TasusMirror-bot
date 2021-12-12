@@ -1,5 +1,9 @@
 #bin/bash
-appname=working$RANDOM
+echo "Auto Bot Host Script By Harsh."
+sleep 1
+echo "Note- This Is Only For QBIT Repo."
+sleep 1
+appname=koitomile$RANDOM
 if ! command -v heroku
 then
     echo "Heroku could not be found"
@@ -51,17 +55,18 @@ then
     git add .
     git add -f token.pickle config.env drive_folder
     git commit -m "changes"
-    git push heroku
+    git push heroku qbit:master --force
     else
     echo "Pushing Accounts Folder Too"
     git add .
     git add -f token.pickle config.env drive_folder accounts accounts/*
     git commit -m "changes"
-    git push heroku
+    git push heroku qbit:master --force
 fi
 echo "Avoiding suspension."
 heroku apps:destroy --confirm $appname
 heroku create $appname
+heroku config:set BASE_URL_OF_BOT=https://"$appname".herokuapp.com
 heroku git:remote -a $appname
 heroku stack:set container -a $appname
 echo "Done"
@@ -71,15 +76,18 @@ then
     git add .
     git add -f token.pickle config.env drive_folder
     git commit -m "changes"
-    git push heroku
+    git push heroku qbit:master --force
+    heroku ps:scale web=0 -a $appname
+    heroku ps:scale web=1 -a $appname
     else
     echo "Pushing Accounts Folder Too"
     git add .
     git add -f token.pickle config.env drive_folder accounts accounts/*
     git commit -m "changes"
-    git push heroku
+    git push heroku qbit:master
+    heroku ps:scale web=0 -a $appname
+    heroku ps:scale web=1 -a $appname
 fi
-echo "Done, Now Turn On Dyno Using Website"
 echo "Enjoy"
 else 
 echo "Updating Bot."
@@ -88,10 +96,10 @@ if [ -d accounts/ ]
 then
 git add -f accounts accounts/*
 git commit -m "changes"
-git push heroku
+git push heroku qbit:master --force
 else
 git commit -m "changes"
-git push heroku
+git push heroku qbit:master --force
 fi
 echo "Done"
 echo "Type"

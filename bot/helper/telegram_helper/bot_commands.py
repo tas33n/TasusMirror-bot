@@ -5,6 +5,10 @@ class _BotCommands:
         self.UnzipMirrorCommand = "unzipmirror"
         self.ZipMirrorCommand = "zipmirror"
         self.TarMirrorCommand = "tarmirror"
+        self.QbMirrorCommand = 'qbmirror'
+        self.QbUnzipMirrorCommand = 'qbunzipmirror'
+        self.QbZipMirrorCommand = 'qbzipmirror'
+        self.QbTarMirrorCommand = 'qbtarmirror'
         self.CancelMirror = "cancel"
         self.CancelAllCommand = "cancelall"
         self.ListCommand = "list"
@@ -30,6 +34,10 @@ class _BotCommands:
         self.TarLeechCommand = 'tarleech'
         self.UnzipLeechCommand = 'unzipleech'
         self.ZipLeechCommand = 'zipleech'
+        self.QbLeechCommand = 'qbleech'
+        self.QbUnzipLeechCommand = 'qbunzipleech'
+        self.QbZipLeechCommand = 'qbzipleech'
+        self.QbTarLeechCommand = 'qbtarleech'
         self.LeechWatchCommand = 'leechwatch'
         self.LeechTarWatchCommand = 'leechtarwatch'
         self.LeechZipWatchCommand = 'leechzipwatch'

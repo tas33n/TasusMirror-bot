@@ -1,4 +1,4 @@
-FROM harshpreets63/mirrorbot:test
+FROM harshpreets63/cutie:sweet
 
 WORKDIR /usr/src/app
 COPY . .

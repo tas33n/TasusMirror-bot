@@ -9,6 +9,7 @@ import time
 import requests
 import aria2p
 import telegram.ext as tg
+import qbittorrentapi as qba
 from dotenv import load_dotenv
 from pyrogram import Client
 from telegraph import Telegraph
@@ -138,7 +139,7 @@ def aria2c_init():
         pass
 
 threading.Thread(target=aria2c_init).start()
-time.sleep(0.5)
+time.sleep(1)
 
 DOWNLOAD_DIR = None
 BOT_TOKEN = None
@@ -437,6 +438,58 @@ try:
         os.remove("accounts.zip")
 except KeyError:
     pass
+#qbittorrent
+def get_client() -> qba.TorrentsAPIMixIn:
+    return qba.Client(host="localhost", port=8090)
+"""
+trackers = subprocess.check_output(["curl -Ns https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all.txt https://ngosang.github.io/trackerslist/tr
+
+trackerslist = set(trackers.split("\n"))
+trackerslist.remove("")
+trackerslist = "\n\n".join(trackerslist)
+get_client().application.set_preferences({"add_trackers":f"{trackerslist}"})
+"""
+
+try:
+    BASE_URL = getConfig('BASE_URL_OF_BOT')
+    if len(BASE_URL) == 0:
+        raise KeyError
+except KeyError:
+    logging.warning('BASE_URL_OF_BOT not provided!')
+    BASE_URL = None
+try:
+    TORRENT_DIRECT_LIMIT = getConfig('TORRENT_DIRECT_LIMIT')
+    if len(TORRENT_DIRECT_LIMIT) == 0:
+        raise KeyError
+    else:
+        TORRENT_DIRECT_LIMIT = float(TORRENT_DIRECT_LIMIT)
+except KeyError:
+    TORRENT_DIRECT_LIMIT = None
+try:
+    WEB_PINCODE = getConfig('WEB_PINCODE')
+    WEB_PINCODE = WEB_PINCODE.lower() == 'true'
+except KeyError:
+    WEB_PINCODE = False 
+try:
+    QB_SEED = getConfig('QB_SEED')
+    QB_SEED = QB_SEED.lower() == 'true'
+except KeyError:
+    QB_SEED = False
+try:
+    SERVER_PORT = getConfig('SERVER_PORT')
+    if len(SERVER_PORT) == 0:
+        raise KeyError
+except KeyError:
+    SERVER_PORT = 80
+try:
+    IS_VPS = getConfig('IS_VPS')
+    IS_VPS = IS_VPS.lower() == 'true'
+except KeyError:
+    IS_VPS = False
+PORT = os.environ.get('PORT', SERVER_PORT)
+web = subprocess.Popen([f"gunicorn wserver:start_server --bind 0.0.0.0:{PORT} --worker-class aiohttp.GunicornWebWorker"], shell=True)
+alive = subprocess.Popen(["python3", "alive.py"])
+nox = subprocess.Popen(["qbittorrent-nox", "--profile=."])
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot
 dispatcher = updater.dispatcher
