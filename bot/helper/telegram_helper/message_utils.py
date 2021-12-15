@@ -111,15 +111,15 @@ def update_all_messages():
         for download in list(download_dict.values()):
             speedy = download.speed()
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
-                if "KiB/s" in speedy:
-                    dlspeed_bytes += float(speedy.split("K")[0]) * 1024
-                elif "MiB/s" in speedy:
-                    dlspeed_bytes += float(speedy.split("M")[0]) * 1048576
+                if 'K' in speedy:
+                    dlspeed_bytes += float(speedy.split('K')[0]) * 1024
+                elif 'M' in speedy:
+                    dlspeed_bytes += float(speedy.split('M')[0]) * 1048576
             if download.status() == MirrorStatus.STATUS_UPLOADING:
-                if "KB/s" in speedy:
-                    uldl_bytes += float(speedy.split("K")[0]) * 1024
-                elif "MB/s" in speedy:
-                    uldl_bytes += float(speedy.split("M")[0]) * 1048576
+                if 'KB/s' in speedy:
+                    uldl_bytes += float(speedy.split('K')[0]) * 1024
+                elif 'MB/s' in speedy:
+                    uldl_bytes += float(speedy.split('M')[0]) * 1048576
         dlspeed = get_readable_file_size(dlspeed_bytes)
         ulspeed = get_readable_file_size(uldl_bytes)
         msg += f"\n<b>DL:</b>{dlspeed}ps | <b>UL:</b>{ulspeed}/s \n"
@@ -148,15 +148,15 @@ def sendStatusMessage(msg, bot):
         for download in list(download_dict.values()):
             speedy = download.speed()
             if download.status() == MirrorStatus.STATUS_DOWNLOADING:
-                if "KiB/s" in speedy:
-                    dlspeed_bytes += float(speedy.split("K")[0]) * 1024
-                elif "MiB/s" in speedy:
-                    dlspeed_bytes += float(speedy.split("M")[0]) * 1048576
+                if 'K' in speedy:
+                    dlspeed_bytes += float(speedy.split('K')[0]) * 1024
+                elif 'M' in speedy:
+                    dlspeed_bytes += float(speedy.split('M')[0]) * 1048576
             if download.status() == MirrorStatus.STATUS_UPLOADING:
-                if "KB/s" in speedy:
-                    uldl_bytes += float(speedy.split("K")[0]) * 1024
-                elif "MB/s" in speedy:
-                    uldl_bytes += float(speedy.split("M")[0]) * 1048576
+                if 'KB/s' in speedy:
+                    uldl_bytes += float(speedy.split('K')[0]) * 1024
+                elif 'MB/s' in speedy:
+                    uldl_bytes += float(speedy.split('M')[0]) * 1048576
         dlspeed = get_readable_file_size(dlspeed_bytes)
         ulspeed = get_readable_file_size(uldl_bytes)
         progress += f"\n<b>DL:</b>{dlspeed}ps | <b>UL:</b>{ulspeed}/s \n"
