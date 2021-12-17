@@ -163,6 +163,7 @@ botcmds = [
     (f"{BotCommands.WatchCommand}", "Mirror Youtube-dl support link"),
     (f"{BotCommands.ZipWatchCommand}", "Mirror Youtube playlist link as .zip"),
     (f"{BotCommands.TarWatchCommand}", "Mirror Youtube playlist link as .tar"),
+    (f'{BotCommands.ListCommand}','Search in Drive'),
     (f"{BotCommands.CancelMirror}", "Cancel a task"),
     (f"{BotCommands.CancelAllCommand}", "Cancel all tasks [owner only]"),
     (f"{BotCommands.CountCommand}", "Count files/folders of G-Drive Links"),
