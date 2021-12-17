@@ -3,7 +3,7 @@ echo "Auto Bot Host Script By Harsh."
 sleep 1
 echo "Note- This Is Only For QBIT Repo."
 sleep 1
-appname=koitomile$RANDOM
+appname=rainbow$RANDOM
 if ! command -v heroku
 then
     echo "Heroku could not be found"
@@ -94,10 +94,11 @@ echo "Updating Bot."
 git add .
 if [ -d accounts/ ]
 then
-git add -f accounts accounts/*
+git add -f token.pickle config.env drive_folder accounts accounts/*
 git commit -m "changes"
 git push heroku qbit:master --force
 else
+git add -f token.pickle config.env drive_folder
 git commit -m "changes"
 git push heroku qbit:master --force
 fi
