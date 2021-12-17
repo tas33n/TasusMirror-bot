@@ -1,5 +1,5 @@
 #bin/bash
-appname=working$RANDOM
+appname=elephant$RANDOM
 if ! command -v heroku
 then
     echo "Heroku could not be found"
@@ -79,22 +79,25 @@ then
     git commit -m "changes"
     git push heroku
 fi
-echo "Done, Now Turn On Dyno Using Website"
+heroku ps:scale worker=0 -a $appname
+heroku ps:scale worker=1 -a $appname
+echo "Done"
 echo "Enjoy"
 else 
 echo "Updating Bot."
 git add .
 if [ -d accounts/ ]
 then
-git add -f accounts accounts/*
+git add -f token.pickle config.env drive_folder accounts accounts/*
 git commit -m "changes"
 git push heroku
 else
+git add -f token.pickle config.env drive_folder
 git commit -m "changes"
 git push heroku
 fi
 echo "Done"
+fi
 echo "Type"
 echo "heroku logs -t"
 echo "To Check Bot Logs Here."
-fi
