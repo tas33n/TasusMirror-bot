@@ -5,11 +5,11 @@ import time
 from sys import executable
 
 import psutil
-from telegraph import Telegraph
+from bot.helper.ext_utils.telegraph_helper import telegraph
 from pyrogram import idle
 from telegram import InlineKeyboardMarkup
 from telegram.ext import CommandHandler
-from bot import IGNORE_PENDING_REQUESTS, app, telegraph_token, bot, botStartTime, dispatcher, updater, IS_VPS
+from bot import IGNORE_PENDING_REQUESTS, app, bot, botStartTime, dispatcher, updater, IS_VPS
 from bot.helper.ext_utils import fs_utils
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, get_readable_time
 from bot.helper.telegram_helper.bot_commands import BotCommands
@@ -172,8 +172,10 @@ def bot_help(update, context):
 /{BotCommands.CancelMirror}  Reply to the message by which the download was initiated and that download will be cancelled.    
 /{BotCommands.UnzipMirrorCommand} [download_url][magnet_link]: Starts mirroring and if downloaded file is any archive, extracts it to Google Drive.
 '''
-    help = Telegraph(access_token=telegraph_token).create_page(title = 'Harsh Mirror Repo', author_name='HarshPreet',
-                                                               author_url='https://t.me/harshmirrorrepo', html_content=help_string_telegraph)["path"]
+    help = telegraph.create_page(
+            title='Harsh Mirror Help',
+            content=help_string_telegraph,
+        )["path"]
     button = button_build.ButtonMaker()
     button.buildbutton("All Other Commands", f"https://telegra.ph/{help}")
     reply_markup = InlineKeyboardMarkup(button.build_menu(1))

@@ -12,7 +12,6 @@ import telegram.ext as tg
 import qbittorrentapi as qba
 from dotenv import load_dotenv
 from pyrogram import Client
-from telegraph import Telegraph
 
 import psycopg2
 from psycopg2 import Error
@@ -254,14 +253,6 @@ LOGGER.info("Generating USER_SESSION_STRING")
 app = Client(
     ":memory:", api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN
 )
-
-# Generate Telegraph Token
-sname = "".join(random.SystemRandom().choices(string.ascii_letters, k=8))
-LOGGER.info("Generating Telegraph Token using '" + sname + "' name")
-telegraph = Telegraph()
-telegraph.create_account(short_name=sname)
-telegraph_token = telegraph.get_access_token()
-LOGGER.info("Telegraph Token Generated: '" + telegraph_token + "'")
 
 try:
     MEGA_KEY = getConfig("MEGA_KEY")
