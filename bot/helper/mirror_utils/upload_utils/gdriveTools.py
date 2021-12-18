@@ -16,7 +16,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from telegram import InlineKeyboardMarkup
-from telegraph import Telegraph
+from bot.helper.ext_utils.telegraph_helper import telegraph
 from tenacity import *
 from bot import DRIVE_NAME, DRIVE_ID, UNI_INDEX_URL
 
@@ -35,7 +35,6 @@ from bot import (
     USE_SERVICE_ACCOUNTS,
     download_dict,
     parent_id,
-    telegraph_token,
     VIEW_LINK,
 )
 from bot.helper.ext_utils.bot_utils import get_readable_file_size, setInterval, time
@@ -46,7 +45,6 @@ LOGGER = logging.getLogger(__name__)
 logging.getLogger("googleapiclient.discovery").setLevel(logging.ERROR)
 if USE_SERVICE_ACCOUNTS:
     SERVICE_ACCOUNT_INDEX = randrange(len(os.listdir("accounts")))
-TELEGRAPHLIMIT = 80
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
 class GoogleDriveHelper:
@@ -666,25 +664,24 @@ class GoogleDriveHelper:
     def edit_telegraph(self):
         nxt_page = 1
         prev_page = 0
-        for content in self.telegraph_content:
-            if nxt_page == 1:
+        for content in self.telegraph_content :
+            if nxt_page == 1 :
                 content += f'<b><a href="https://telegra.ph/{self.path[nxt_page]}">Next</a></b>'
                 nxt_page += 1
-            else:
+            else :
                 if prev_page <= self.num_of_path:
                     content += f'<b><a href="https://telegra.ph/{self.path[prev_page]}">Prev</a></b>'
                     prev_page += 1
                 if nxt_page < self.num_of_path:
                     content += f'<b> | <a href="https://telegra.ph/{self.path[nxt_page]}">Next</a></b>'
                     nxt_page += 1
-            Telegraph(access_token=telegraph_token).edit_page(
-                path=self.path[prev_page],
-                title="Harsh Mirror Repo",
-                author_name="Harsh",
-                author_url="https://github.com/Harshpreets63/Mirror-Bot",
-                html_content=content,
+            telegraph.edit_page(
+                path = self.path[prev_page],
+                title = 'Harsh Mirror Repo Search',
+                content=content
             )
         return
+        
     def escapes(self, str):
         chars = ['\\', "'", '"', r'\a', r'\b', r'\f', r'\n', r'\r', r'\s', r'\t']
         for char in chars:
@@ -896,7 +893,7 @@ class GoogleDriveHelper:
                         else:
                             msg += f"<b><a href={furl}>Drive Link</a></b>"
                         if UNI_INDEX_URL[INDEX] is not None:
-                            url_path = requests.utils.quote(f'{file.get("name")}')
+                            url_path = "/".join([requests.utils.quote(n, safe='') for n in self.get_recursive_list(file, parent_id)])
                             url = f"{UNI_INDEX_URL[INDEX]}/{url_path}/"
                             if SHORTENER is not None and SHORTENER_API is not None:
                                 siurl = requests.get(
@@ -918,7 +915,7 @@ class GoogleDriveHelper:
                         else:
                             msg += f"<b><a href={furl}>Drive Link</a></b>"
                         if UNI_INDEX_URL[INDEX] is not None:
-                            url_path = requests.utils.quote(f'{file.get("name")}')
+                            url_path = "/".join([requests.utils.quote(n, safe='') for n in self.get_recursive_list(file, parent_id)])
                             url = f"{UNI_INDEX_URL[INDEX]}/{url_path}"
                             if SHORTENER is not None and SHORTENER_API is not None:
                                 siurl = requests.get(
@@ -939,21 +936,20 @@ class GoogleDriveHelper:
                     msg += '<br><br>'
                     content_count += 1
                     all_contents_count += 1
-                    if content_count == TELEGRAPHLIMIT :
+                    if len(msg.encode('utf-8')) > 39000:
                         self.telegraph_content.append(msg)
                         msg = ""
-                        content_count = 0
         if msg != '':
             self.telegraph_content.append(msg)
         if len(self.telegraph_content) == 0:
             return "I ..I found nothing of that sort :(", None
-        for content in self.telegraph_content :
-            self.path.append(Telegraph(access_token=telegraph_token).create_page(
-                                            title = 'Mirrorbot Search',
-                                            author_name='Repo Link',
-                                            author_url='https://github.com/harshpreets63/Mirror-Bot',
-                                            html_content=content
-                                            )['path'])    
+        for content in self.telegraph_content:
+           self.path.append(
+               telegraph.create_page(
+                   title='Harsh Mirror Repo Search',
+                   content=content
+               )["path"]
+           )
         self.num_of_path = len(self.path)
         if self.num_of_path > 1:
             self.edit_telegraph()
@@ -1034,10 +1030,9 @@ class GoogleDriveHelper:
                             msg += f' <b>| <a href="{urls}">View Link</a></b>'
             msg += '<br><br>'
             content_count += 1
-            if content_count == TELEGRAPHLIMIT :
-                self.telegraph_content.append(msg)
-                msg = ""
-                content_count = 0
+            if len(msg.encode('utf-8')) > 39000:
+                    self.telegraph_content.append(msg)
+                    msg = ""
 
         if msg != '':
             self.telegraph_content.append(msg)
@@ -1045,14 +1040,14 @@ class GoogleDriveHelper:
         if len(self.telegraph_content) == 0:
             return "No Result Found ❌", None
 
-        for content in self.telegraph_content :
-            self.path.append(Telegraph(access_token=telegraph_token).create_page(
-                                                    title = 'Harsh Mirror Repo',
-                                                    author_name='Harsh',
-                                                    author_url='https://github.com/Harshpreets63/Mirror-Bot',
-                                                    html_content=content
-                                                    )['path'])
-
+        for content in self.telegraph_content:
+           self.path.append(
+               telegraph.create_page(
+                   title='Harsh Mirror Repo Search',
+                   content=content
+               )["path"]
+           )
+        time.sleep(0.5)
         self.num_of_path = len(self.path)
         if self.num_of_path > 1:
             self.edit_telegraph()
