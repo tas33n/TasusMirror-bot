@@ -349,6 +349,7 @@ class GoogleDriveHelper:
                 if self.is_cancelled:
                     return
         else:
+            mime_type = 'Folder'
             try:
                 dir_id = self.create_directory(
                     os.path.basename(os.path.abspath(file_name)), parent_id
@@ -619,19 +620,21 @@ class GoogleDriveHelper:
         new_id = None
         for item in list_dirs:
             current_file_name = os.path.join(input_directory, item)
-            if self.is_cancelled:
-                return None
             if os.path.isdir(current_file_name):
                 current_dir_id = self.create_directory(item, parent_id)
                 new_id = self.upload_dir(current_file_name, current_dir_id)
+                self.total_folders += 1
             else:
                 mime_type = get_mime_type(current_file_name)
                 file_name = current_file_name.split("/")[-1]
                 # current_file_name will have the full path
                 self.upload_file(current_file_name, file_name, mime_type, parent_id)
+                self.total_files += 1
                 new_id = parent_id
+            if self.is_cancelled:
+                break
         return new_id
-
+    
     def authorize(self):
         # Get credentials
         credentials = None
