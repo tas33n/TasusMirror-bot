@@ -428,6 +428,13 @@ try:
         os.remove("accounts.zip")
 except KeyError:
     pass
+#uptobox
+try:
+    UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
+    if len(UPTOBOX_TOKEN) == 0:
+        raise KeyError
+except KeyError:
+    UPTOBOX_TOKEN = None
 updater = tg.Updater(token=BOT_TOKEN)
 bot = updater.bot
 dispatcher = updater.dispatcher
