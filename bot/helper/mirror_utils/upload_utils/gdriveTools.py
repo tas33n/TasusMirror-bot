@@ -583,6 +583,8 @@ class GoogleDriveHelper:
                     else:
                         err = e
                     LOGGER.error(err)
+            if self.is_cancelled:
+               break
         return new_id
 
     @retry(
