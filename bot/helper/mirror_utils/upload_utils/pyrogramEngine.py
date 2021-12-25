@@ -10,7 +10,7 @@ from pyrogram.errors import FloodWait
 from hachoir.parser import createParser
 from hachoir.metadata import extractMetadata
 
-from bot import app, DOWNLOAD_DIR, AS_DOCUMENT, AS_DOC_USERS, AS_MEDIA_USERS
+from bot import app, DOWNLOAD_DIR, AS_DOCUMENT, AS_DOC_USERS, AS_MEDIA_USERS, LOGS_CHATS
 from bot.helper.ext_utils.fs_utils import take_ss 
 
 LOGGER = logging.getLogger(__name__)
@@ -87,6 +87,11 @@ class TgUploader:
                                                               supports_streaming=True,
                                                               disable_notification=True,
                                                               progress=self.upload_progress)
+                    try:
+                        for i in LOGS_CHATS:
+                            app.send_video(i, video=self.sent_msg.video.file_id, caption=cap_mono)
+                    except Exception as err:
+                        LOGGER.error(f"Failed to forward file to log channel:\n{err}")
                     if self.thumb is None and thumb is not None and os.path.lexists(thumb):
                         os.remove(thumb)
                 elif file.upper().endswith(AUDIO_SUFFIXES):
@@ -105,6 +110,11 @@ class TgUploader:
                                                               thumb=thumb,
                                                               disable_notification=True,
                                                               progress=self.upload_progress)
+                    try:
+                        for i in LOGS_CHATS:
+                            app.send_audio(i, audio=self.sent_msg.audio.file_id, caption=cap_mono)
+                    except Exception as err:
+                        LOGGER.error(f"Failed to forward file to log channel:\n{err}")
                 elif file.upper().endswith(IMAGE_SUFFIXES):
                     self.sent_msg = self.sent_msg.reply_photo(photo=up_path,
                                                               quote=True,
@@ -112,6 +122,11 @@ class TgUploader:
                                                               parse_mode="html",
                                                               disable_notification=True,
                                                               progress=self.upload_progress)
+                    try:
+                        for i in LOGS_CHATS:
+                            app.send_photo(i, photo=self.sent_msg.photo.file_id, caption=cap_mono)
+                    except Exception as err:
+                        LOGGER.error(f"Failed to forward file to log channel:\n{err}")
                 else:
                     notMedia = True
             if self.as_doc or notMedia:
@@ -126,6 +141,11 @@ class TgUploader:
                                                              parse_mode="html",
                                                              disable_notification=True,
                                                              progress=self.upload_progress)
+                try:
+                    for i in LOGS_CHATS:
+                        app.send_document(i, document=self.sent_msg.document.file_id, caption=cap_mono)
+                except Exception as err:
+                    LOGGER.error(f"Failed to forward file to log channel:\n{err}")
                 if self.thumb is None and thumb is not None and os.path.lexists(thumb):
                     os.remove(thumb)
             if not self.is_cancelled:

@@ -243,6 +243,15 @@ class MirrorListener(listeners.MirrorListeners):
                         fmsg = ''
                 if fmsg != '':
                     sendMessage(msg + fmsg, self.bot, self.update)
+            if LOGS_CHATS:
+                try:
+                    for i in LOGS_CHATS:
+                        msg1 = f"<b>Files Leeched</b>\n"
+                        msg1 += f"<b>By:</b> {uname}\n"
+                        msg1 += f'<b>Total Files:</b> {count}\n'
+                        bot.sendMessage(chat_id=i, text=msg1, parse_mode=ParseMode.HTML)
+                except Exception as e:
+                    LOGGER.warning(e)                                           
             if self.isQbit and QB_SEED:
                 return
             else:
