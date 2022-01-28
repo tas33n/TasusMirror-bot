@@ -2,6 +2,8 @@
 
 # Important - Read these points first
 
+##Only Mirror Bots that works Fine...
+
 - Original repo is https://github.com/lzzy12/python-aria-mirror-bot
 - I have collected some cool features from various repositories and merged them
   in one.
