@@ -57,4 +57,4 @@ class TelegraphHelper:
 			return self.edit_page(path, title, content)
 
 
-telegraph=TelegraphHelper('Harsh Mirror Repo', 'https://github.com/harshpreets63/Mirror-Bot')
+telegraph=TelegraphHelper('TasusMirror Admin', 'https://t.me/tasus_bot')

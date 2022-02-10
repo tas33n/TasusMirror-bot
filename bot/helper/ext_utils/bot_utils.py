@@ -25,7 +25,7 @@ class MirrorStatus:
 
 
 PROGRESS_MAX_SIZE = 100 // 8
-PROGRESS_INCOMPLETE = ["●", "●", "●", "●", "●", "●", "●"]
+PROGRESS_INCOMPLETE = ["■", "■", "■", "■", "■", "■", "■"]
 
 SIZE_UNITS = ["B", "KB", "MB", "GB", "TB", "PB"]
 
@@ -114,10 +114,10 @@ def get_progress_bar_string(status):
     p = min(max(p, 0), 100)
     cFull = p // 8
     cPart = p % 8 - 1
-    p_str = "●" * cFull
+    p_str = "■" * cFull
     if cPart >= 0:
         p_str += PROGRESS_INCOMPLETE[cPart]
-    p_str += "○" * (PROGRESS_MAX_SIZE - cFull)
+    p_str += "□" * (PROGRESS_MAX_SIZE - cFull)
     p_str = f"[{p_str}]"
     return p_str
 
@@ -126,7 +126,7 @@ def get_readable_message():
         msg = ""
         for download in list(download_dict.values()):
             msg += f"<b>Filename:</b> <code>{download.name()}</code>"
-            msg += f"\n<b>Status:</b> <i>{download.status()}</i>"
+            msg += f"\n<b>Status:</b> <i>{download.status()}</i>⬇️"
             if download.status() != MirrorStatus.STATUS_ARCHIVING and download.status() != MirrorStatus.STATUS_EXTRACTING and download.status() != MirrorStatus.STATUS_SPLITTING:
                 msg += f"\n<code>{get_progress_bar_string(download)} {download.progress()}</code>"
                 if download.status() == MirrorStatus.STATUS_DOWNLOADING:
@@ -148,7 +148,7 @@ def get_readable_message():
                             f" | <b>Leechers:</b> {download.torrent_info().num_leechs}"
                     except:
                         pass
-                msg += f'\n<b>User:</b> {download.message.from_user.first_name} ➡️<code>{download.message.from_user.id}</code>'
+                msg += f'\n<b>Request:</b> {download.message.from_user.first_name} ️<code>{download.message.from_user.id}</code>'
                 msg += f"\n<b>To Stop:</b> <code>/{BotCommands.CancelMirror} {download.gid()}</code>"
             msg += "\n\n"
         return msg    
